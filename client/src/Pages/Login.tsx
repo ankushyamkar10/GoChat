@@ -8,7 +8,7 @@ type loginData = {
   password: string;
 };
 
-const Home: React.FC = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const [loginDetails, setLoginDetails] = useState<loginData>({
@@ -18,15 +18,12 @@ const Home: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
-
     const { data, status } = await axios.post(loginHost, loginDetails);
 
     if (status === 201) {
       localStorage.setItem("user", JSON.stringify(data));
       navigate("/");
     }
-      
-    
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,4 +56,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Login;

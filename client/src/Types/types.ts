@@ -1,10 +1,16 @@
 type User = {
   name: string;
   password: string;
-  _id?: string;
-  token?: string;
-  isAvtarSet?: Boolean;
-  img?: string;
+  _id: string;
+  token: string;
+  isAvtarSet: Boolean;
+  img: string;
 };
 
-export type { User };
+type Message = {
+  message: {
+    text: string;
+  };
+  isSenderMe: Boolean;
+};
+export type { User, Message };

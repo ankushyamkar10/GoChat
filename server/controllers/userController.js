@@ -89,7 +89,12 @@ const generateToken = (res, id) => {
 }
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find();
+  const users = await User.find({ _id: { $ne: req.params.id } }).select([
+    'email',
+    'name',
+    'img',
+    '_id'
+  ]);
   if (users)
     res.status(200).json(users)
   else {

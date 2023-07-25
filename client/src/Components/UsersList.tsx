@@ -1,28 +1,27 @@
-import { Socket } from "socket.io-client";
 import { User } from "../Types/types";
 // import { joinRoom } from "../Utils/joinRoom";
 import { useEffect, useState } from "react";
 import { fetchUsers } from "../Utils/constants";
-import react from "../assets/react.svg";
 
 type Props = {
   setSelected: (val: User) => void;
-  socket: Socket;
+  user : User | null
 };
 
-const UsersList: React.FC<Props> = ({ setSelected, socket }) => {
+const UsersList: React.FC<Props> = ({ setSelected,user }) => {
   const [users, setUsers] = useState<Array<User>>();
 
   useEffect(() => {
-    fetchUsers()
+    fetchUsers(user?._id)
       .then((res) => setUsers(res))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));    
   }, []);
 
   const handleClick = (user: User) => {
     // joinRoom({ user, socket });
     setSelected(user);
   };
+  
 
   return (
     <aside className="userslist-aside">
