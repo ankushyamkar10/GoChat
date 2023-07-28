@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Chat from "./Pages/Chat";
 import Login from "./Pages/Login";
 import Regsiter from "./Pages/Regsiter";
+import SetAvtar from "./Pages/SetAvtar";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Regsiter />}></Route>
             <Route path="/" element={<Chat />}></Route>
+            <Route path="/setAvtar" element={<SetAvtar />}></Route>
           </Routes>
         </div>
       </BrowserRouter>

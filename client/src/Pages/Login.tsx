@@ -19,9 +19,12 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     const { data, status } = await axios.post(loginHost, loginDetails);
-
+    
     if (status === 201) {
+      console.log(data);
+      
       localStorage.setItem("user", JSON.stringify(data));
+      if (!data.isAvtarSet) navigate("/setAvtar");
       navigate("/");
     }
   };

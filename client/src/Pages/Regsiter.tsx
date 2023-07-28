@@ -25,9 +25,10 @@ const Regsiter: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
     const { data, status } = await axios.post(registerHost, registerDetails);
-
+    
     if (status === 201) {
       localStorage.setItem("user", JSON.stringify(data));
+      if(!data.isAvtarSet) navigate('/setAvtar')
       navigate("/");
     }
   };

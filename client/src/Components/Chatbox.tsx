@@ -6,9 +6,11 @@ import axios from "axios";
 import { sendMsgHost } from "../Utils/constants";
 import Messages from "./Messages";
 import { fetchMsgs } from "../Utils/constants";
+import { MdPhone, MdVideoCall } from "react-icons/md";
+import { HiDotsVertical } from "react-icons/hi";
 
 type Props = {
-  selected: User;
+  selected?: User;
   user: User;
   socket: React.MutableRefObject<Socket | undefined>;
 };
@@ -30,8 +32,8 @@ const Chatbox = (props: Props) => {
     socket.current?.emit("sendMsg", {
       text: msgRef.current?.value,
       sender: user._id,
-      recieverId: selected._id,
-    });    
+      recieverId: selected?._id,
+    });
 
     const response = await axios.post(sendMsgHost, {
       text: msgRef.current?.value,
@@ -55,7 +57,6 @@ const Chatbox = (props: Props) => {
 
   useEffect(() => {
     socket.current?.on("recieveMsg", (data: Message) => {
-      
       const new_msg = {
         message: data.message,
         isSenderMe: false,
@@ -85,8 +86,21 @@ const Chatbox = (props: Props) => {
   return (
     <section className="chatbox-section">
       <nav>
-        <img src={react} alt={react} />
-        <h4>{selected?.name}</h4>
+        <div className="display-flex">
+          <img
+            src={selected.img}
+            alt={react}
+          />
+          <div className="selected-info">
+            <h5>{selected.name}</h5>
+            <div className="selected-email">{selected.email}</div>
+          </div>
+        </div>
+        <div className="options-icons">
+          <MdPhone size={18}/>
+          <MdVideoCall size={18}/>
+          <HiDotsVertical size={18}/>
+        </div>
       </nav>
       <Messages messages={messages} />
       <form className="message-form" onSubmit={(e) => handleSubmit(e)}>

@@ -29,13 +29,15 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (newUser) {
+    const token = generateToken(newUser._id);
+    console.log(token)
     res.status(201).json({
       _id: newUser._id,
       name: newUser.name,
       email: newUser.email,
       isAvtarSet: newUser.isAvtarSet,
       img: newUser.img,
-      token: generateToken(res, newUser._id),
+      token
     });
   } else {
     res.status(400);
@@ -52,18 +54,18 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please fill all the fields");
   }
-
   const user = await User.findOne({ name });
 
   if (user) {
     if (await bcryptjs.compare(password, user.password)) {
+      const token = generateToken(user._id);
       res.status(201).json({
         _id: user._id,
         name: user.name,
         email: user.email,
         isAvtarSet: user.isAvtarSet,
         img: user.img,
-        token: generateToken(res, user._id),
+        token,
       });
       console.log(`logged in as ${user.name}`);
     } else {
@@ -76,24 +78,21 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-const generateToken = (res, id) => {
+const generateToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SEC, {
-    expiresIn: '30d'
-  })
-  res.cookie('jwt', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-    sameSite: 'strict', // Prevent CSRF attacks
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    expiresIn: "30d",
   });
-}
+  return token;
+};
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({ _id: { $ne: req.params.id } }).select([
     'email',
     'name',
     'img',
-    '_id'
+    '_id',
+    'isAvtarSet',
+    'token'
   ]);
   if (users)
     res.status(200).json(users)
@@ -104,8 +103,27 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 })
 
+const setAvatar = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  const { imageUrl } = req.body
+
+  const updatedUser = await User.findByIdAndUpdate(id, {
+    isAvtarSet: true,
+    img: imageUrl
+  }, {
+    new: true
+  })
+
+  if (updatedUser) {
+    res.status(200).json(updatedUser)
+  }
+  else
+    res.status(500).json({ message: "Server wasn't able to set your avtar!" })
+})
+
 module.exports = {
   registerUser,
   loginUser,
-  getAllUsers
+  getAllUsers,
+  setAvatar
 }
