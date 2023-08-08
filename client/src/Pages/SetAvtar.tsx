@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import { useNavigate } from "react-router-dom";
-import { User } from "../Types/types";
+import { Group, User } from "../Types/types";
 import axios from "axios";
-import { setAvtarHost } from "../Utils/constants";
+import { setUserAvtarHost } from "../Utils/constants";
+import "./Avtar.scss";
+import { useAppSelector } from "../hooks/useTypedSelector";
+import { userState } from "../features/Auth/AuthSlice";
 
 function convertToBase64(file: File | undefined) {
   return new Promise((resolve, reject) => {
@@ -29,17 +32,22 @@ const getAllAvtars = async (api: string) => {
   }
   return data;
 };
-const setUserAvtar = async (selected: string, user: User) => {
-  const res = await axios.patch(setAvtarHost + "/" + user._id, {
-    imageUrl: selected,
-  });
+const setUserAvtar = async (
+  selected: string,
+  userId: string | undefined,
+  decider: string
+) => {
+  if (decider === "user") {
+    const res = await axios.patch(setUserAvtarHost + "/" + userId, {
+      imageUrl: selected,
+    });
 
-  return await res.data;
+    return await res.data;
+  }
 };
 
 const SetAvtar = () => {
-  const currUser: string | null = localStorage.getItem("user");
-  const user: User = currUser && JSON.parse(currUser);
+  const { user } = useAppSelector(userState);
 
   const api: string = `https://api.multiavatar.com/4645646`;
   const [avtar, setAvtar] = useState<string[]>([]);
@@ -48,7 +56,7 @@ const SetAvtar = () => {
 
   useEffect(() => {
     if (!user) navigate("/login");
-
+    if (user?.isAvtarSet) navigate("/");
     getAllAvtars(api)
       .then((res) => setAvtar(res))
       .catch((error) => console.log(error));
@@ -61,7 +69,7 @@ const SetAvtar = () => {
   const handleSubmit = (e?: React.FormEvent<Element>) => {
     e?.preventDefault();
     if (selected !== "")
-      setUserAvtar(selected, user)
+      setUserAvtar(selected, user?._id, "user")
         .then((res) => {
           console.log(res);
           localStorage.setItem("user", JSON.stringify(res));
@@ -73,10 +81,8 @@ const SetAvtar = () => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const base64 = await convertToBase64(file);
-    base64?.toString()
-    if(typeof base64 === "string")
-      setSelected(base64)
-    
+    base64?.toString();
+    if (typeof base64 === "string") setSelected(base64);
   };
 
   return (
@@ -84,11 +90,8 @@ const SetAvtar = () => {
       {avtar.length > 0 ? (
         <div className="">
           <div className="user-bar">
-            <img
-              src={selected ? selected : user.img}
-              alt=""
-            />
-            {user.name}
+            <img src={selected ? selected : user?.img} alt="" />
+            {user?.name}
           </div>
           <div className="text-div">Please select Avtar</div>
 

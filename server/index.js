@@ -30,6 +30,7 @@ const io = new Server(server, {
 
 app.use('/api/users', require('./routes/userRoutes'))
 app.use('/api/message', require('./routes/messageRoutes'))
+app.use('/api/groups', require('./routes/groupRoutes'))
 
 app.all("*", (req, res) => {
   res.status(404);

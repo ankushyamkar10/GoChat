@@ -1,36 +1,48 @@
-import React, {  useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { registerHost } from "../Utils/constants";
-
-
-type registerData = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-
+import "./Auth.scss";
+import { RegisterData } from "../Types/types";
+import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
+import { register, reset, userState } from "../features/Auth/AuthSlice";
 
 const Regsiter: React.FC = () => {
   const navigate = useNavigate();
-  const [registerDetails, setRegisterDetails] = useState<registerData>({
+  const authState = useAppSelector(userState);
+  const dispatch = useAppDispatch();
+  const [registerDetails, setRegisterDetails] = useState<RegisterData>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const { name, email, password, confirmPassword } = registerDetails;
+
+  useEffect(() => {
+    if (authState.user || authState.isSuccess) navigate("/");
+    dispatch(reset());
+  }, [authState.user, authState.isSuccess, dispatch, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
-    const { data, status } = await axios.post(registerHost, registerDetails);
-    
-    if (status === 201) {
-      localStorage.setItem("user", JSON.stringify(data));
-      if(!data.isAvtarSet) navigate('/setAvtar')
-      navigate("/");
-    }
+
+    if (
+      name !== "" &&
+      email !== "" &&
+      password !== "" &&
+      confirmPassword !== ""
+    ) {
+      dispatch(register(registerDetails));
+
+      if (authState.isSuccess) {
+        if (!authState.user?.isAvtarSet) {
+          navigate("/setAvtar");
+        } else {
+          navigate("/chat");
+        }
+      }
+    } else if (password !== confirmPassword) {
+      alert("Passwords does not matches!");
+    } else alert("Fill All the details");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

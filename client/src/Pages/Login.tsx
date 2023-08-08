@@ -1,32 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { loginHost } from "../Utils/constants";
-
-type loginData = {
-  name: string;
-  password: string;
-};
+import { LoginData } from "../Types/types";
+import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
+import { login, reset, userState } from "../features/Auth/AuthSlice";
+import "./Auth.scss";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const authState = useAppSelector(userState);
 
-  const [loginDetails, setLoginDetails] = useState<loginData>({
+  const [loginDetails, setLoginDetails] = useState<LoginData>({
     name: "",
     password: "",
   });
 
+  const { name, password } = loginDetails;
+
+  useEffect(() => {
+    if (authState.user || authState.isSuccess) navigate("/");
+    dispatch(reset());
+  }, [authState.user, authState.isSuccess, dispatch, navigate]);
+
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
-    const { data, status } = await axios.post(loginHost, loginDetails);
-    
-    if (status === 201) {
-      console.log(data);
-      
-      localStorage.setItem("user", JSON.stringify(data));
-      if (!data.isAvtarSet) navigate("/setAvtar");
-      navigate("/");
-    }
+
+    if (name !== "" && password !== "") {
+      dispatch(login(loginDetails));
+
+      if (authState.isSuccess) {
+        if (!authState.user?.isAvtarSet) {
+          navigate("/setAvtar");
+        } else {
+          navigate("/chat");
+        }
+      }
+    } else alert("Fill all the details");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +49,7 @@ const Login: React.FC = () => {
         <input
           type="text"
           id="name"
-          value={loginDetails?.name}
+          value={loginDetails.name}
           onChange={handleChange}
           required
         />
@@ -48,11 +57,10 @@ const Login: React.FC = () => {
         <input
           type="password"
           id="password"
-          value={loginDetails?.password}
+          value={loginDetails.password}
           onChange={handleChange}
           required
         />
-        <label htmlFor="id">Password: </label>
         <button>Enter</button>
       </form>
     </div>

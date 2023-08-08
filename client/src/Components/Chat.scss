@@ -1,11 +1,9 @@
 .chats-screen {
   display: flex;
+  width: 100%;
   height: 100vh;
 }
-.chats-screen-div {
-  display: flex;
-  width: 100%;
-}
+
 .chatbox-section::-webkit-scrollbar {
   width: 5px;
 }
@@ -26,21 +24,216 @@
   display: flex;
   flex-direction: column;
   position: relative;
+
   .message {
     width: fit-content;
     max-width: 70%;
-    // background: rgb(38, 215, 227);
     background: rgb(85, 237, 85);
-    color: #0E1114;
+    color: rgb(14, 17, 20);
     padding: 0.2rem 0.5rem;
     border-radius: 5px;
     margin: 0.2rem 0;
   }
 }
 
-.justify-content-right{
+.user-groups-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(134, 150, 160, 0.15);
+  div {
+    display: flex;
+    padding: 0.5rem 0;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+
+    &:hover {
+      background: rgba($color: white, $alpha: 0.05);
+      cursor: pointer;
+    }
+  }
+}
+.bb {
+  border-bottom: 2px solid rgb(85, 237, 85);
+}
+.justify-content-right {
   justify-content: flex-end;
 }
-.justify-content-left{
+.justify-content-left {
   justify-content: flex-start;
+}
+.chatbox-section {
+  width: 75vw;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  position: relative;
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 1rem;
+    border-bottom: 1px solid rgba(134, 150, 160, 0.15);
+
+    .selected-info {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      letter-spacing: 1px;
+
+      h4 {
+        font-weight: 500;
+      }
+      .selected-email {
+        font-size: 0.5rem;
+      }
+    }
+    .options-icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+  }
+  img {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-right: 0.5rem;
+    border-radius: 100%;
+  }
+  .message-form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    margin-bottom: 2px;
+    input {
+      outline: none;
+      flex: 1;
+      padding: 0.5rem;
+      color: #0e1114;
+      border: 0;
+      border-radius: 0.5rem;
+      margin: 0 1rem;
+    }
+    button {
+      padding: 0 1.2rem;
+      color: #0e1114;
+      background: rgb(85, 237, 85);
+      border: 0;
+      border-radius: 0.5rem;
+      margin-right: 1rem;
+    }
+  }
+}
+.nochat-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75vw;
+}
+.contacts {
+  width: 25vw;
+  height: calc(100vh - 53.5px);
+  border-right: 1px solid rgba(134, 150, 160, 0.15);
+  position: relative;
+}
+//userslist
+.users_list {
+  overflow-y: scroll;
+  height: calc(100vh - 93.5px);
+  position: relative;
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(134, 150, 160, 0.15);
+    background: rgb(14, 17, 20);
+    &:hover {
+      background: rgba($color: white, $alpha: 0.05);
+    }
+    img {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 100%;
+      margin-right: 0.5rem;
+    }
+  }
+}
+.users_list::-webkit-scrollbar {
+  width: 2px;
+}
+.users_list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.users_list::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 20px;
+}
+
+.user-me {
+  position: relative;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(134, 150, 160, 0.15);
+  .user-image {
+    display: flex;
+  }
+  img {
+    height: 2.2rem;
+    width: 2.2rem;
+  }
+  .icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+}
+.absolute {
+  position: absolute;
+  top: 2.3rem;
+  right: 1.7rem;
+  z-index: 9999;
+  .three_dots {
+    div {
+      background: rgb(85, 237, 85);
+      color: rgb(14, 17, 20);
+      font-size: 0.8rem;
+      padding: 0.5rem 2rem;
+      font-weight: 500;
+
+      &:hover {
+        background: rgb(19, 215, 19);
+      }
+    }
+  }
+}
+
+.add_msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  padding: 0.9rem 1rem;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgb(85, 237, 85);
+  font-weight: 900;
+  border-radius: 100%;
+  svg {
+    path {
+      color: #0e1114;
+    }
+  }
 }

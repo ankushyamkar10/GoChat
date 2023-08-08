@@ -7,24 +7,18 @@
   font-family: "Poppins", sans-serif;
   color: white;
 }
-body {
-  background: #0e1114;
-}
-.home-form {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
 
-  input {
-    padding: 8px;
-    margin-bottom: 5px;
-  }
-  input:focus {
-    outline: none;
-  }
-  button {
-    margin-top: 8px;
-  }
+$midnight: rgb(14, 17, 20) !important;
+$green: rgb(85, 237, 85) !important;
+$hover: rgba(
+  $color: white,
+  $alpha: 0.05,
+) !important;
+
+//borders
+$border: 1px solid rgba(134, 150, 160, 0.15);
+body {
+  background: $midnight;
 }
 
 //navbar
@@ -46,164 +40,9 @@ body {
 //   color: white;
 // }
 
-.contacts {
-  width: 30vw;
-  border-right: 1px solid rgba(134, 150, 160, 0.15);
-}
-//userslist
-.userslist {
-  overflow-y: scroll;
-  div {
-    display: flex;
-    align-items: center;
-  }
-  
-  li {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding: 0.8rem 1rem;
-    font-size: 0.8rem;
-    border-bottom: 0.1px solid rgba(134, 150, 160, 0.15);
-
-    img {
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 100%;
-      margin-right: 0.5rem;
-    }
-  }
-}
-.userslist::-webkit-scrollbar {
-  width: 5px;
-}
-.userslist::-webkit-scrollbar-track {
-  background: transparent;
-}
-.userslist::-webkit-scrollbar-thumb {
-  background-color: white;
-  border-radius: 20px;
-}
-
-//chatbox
-.chatbox-section {
-  width: 70vw;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  position: relative;
-
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid rgba(134, 150, 160, 0.15);
-
-    .selected-info {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      letter-spacing: 1px;
-
-      h5 {
-        font-weight: 500;
-      }
-      .selected-email {
-        font-size: 0.5rem;
-      }
-    }
-    .options-icons {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.7rem;
-    }
-  }
-  img {
-    width: 2.2rem;
-    height: 2.2rem;
-    margin-right: 0.5rem;
-    border-radius: 100%;
-  }
-  .message-form {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    margin-bottom: 2px;
-    input {
-      outline: none;
-      flex: 1;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
-      color: #0e1114;
-    }
-    button {
-      padding-left: 1rem;
-      padding-right: 1rem;
-      color: #0e1114;
-      background: white;
-      border: 0;
-    }
-  }
-}
-.nochat-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 75vw;
-}
-
-//chatscreen
-
-//avtars
-.avtar-div {
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  .text-div {
-    margin-bottom: 1rem;
-  }
-  .user-bar {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    img {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 100%;
-    }
-  }
-  .avtar-images-div {
-    display: flex;
-    gap: 2rem;
-    .images {
-      width: 4rem;
-      height: 4rem;
-    }
-  }
-  button {
-    margin-top: 1rem;
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
-    color: #0e1114;
-  }
-  form {
-    input {
-      padding: 0.5rem 1rem;
-    }
-    color: #0e1114;
-  }
-}
-
 // utils
 .display-flex {
   display: flex !important;
 }
+
+//constnts

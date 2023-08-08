@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (newUser) {
-    const token = generateToken(newUser._id);
+    const token = generateToken(newUser._id, res);
     console.log(token)
     res.status(201).json({
       _id: newUser._id,
@@ -58,7 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (user) {
     if (await bcryptjs.compare(password, user.password)) {
-      const token = generateToken(user._id);
+      const token = generateToken(user._id, res);
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -78,11 +78,12 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-const generateToken = (id) => {
+const generateToken = (id, res) => {
   const token = jwt.sign({ id }, process.env.JWT_SEC, {
     expiresIn: "30d",
   });
-  return token;
+  res.cookie('jwt', token, { httpOnly: true, secure: true, })
+  return token
 };
 
 const getAllUsers = asyncHandler(async (req, res) => {

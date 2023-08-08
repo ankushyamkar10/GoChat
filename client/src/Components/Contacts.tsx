@@ -1,6 +1,5 @@
 import { User } from "../Types/types";
 import UserList from "./UserList";
-import UserMe from "./UserMe";
 
 type Props = {
   setSelected: (val: User) => void;
@@ -8,11 +7,9 @@ type Props = {
 };
 
 const Contacts: React.FC<Props> = ({ setSelected, user }) => {
-
   return (
     <div className="contacts">
-      <UserMe user={user}/>
-      <UserList setSelected={setSelected} user={user}/>
+      <UserList setSelected={setSelected} user={user} />
     </div>
   );
 };

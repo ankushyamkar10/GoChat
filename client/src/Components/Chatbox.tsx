@@ -7,11 +7,11 @@ import { sendMsgHost } from "../Utils/constants";
 import Messages from "./Messages";
 import { fetchMsgs } from "../Utils/constants";
 import { MdPhone, MdVideoCall } from "react-icons/md";
-import { HiDotsVertical } from "react-icons/hi";
+import {HiDotsVertical} from 'react-icons/hi'
 
 type Props = {
-  selected?: User;
-  user: User;
+  selected: User | null;
+  user: User | null;
   socket: React.MutableRefObject<Socket | undefined>;
 };
 
@@ -22,7 +22,7 @@ const Chatbox = (props: Props) => {
   const msgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetchMsgs(user._id, selected?._id)
+    fetchMsgs(user?._id, selected?._id)
       .then((res) => setMessages(res))
       .catch((err) => console.log(err));
   }, [user, selected, setMessages, upComingMsg]);
@@ -31,7 +31,7 @@ const Chatbox = (props: Props) => {
     e.preventDefault();
     socket.current?.emit("sendMsg", {
       text: msgRef.current?.value,
-      sender: user._id,
+      sender: user?._id,
       recieverId: selected?._id,
     });
 
@@ -74,7 +74,7 @@ const Chatbox = (props: Props) => {
         isSenderMe: false,
       };
       newMsgArray?.push(new_msg);
-      setMessages(newMsgArray);
+      setMessages(newMsgArray); 
       setUpComingMsg(null);
     }
   }, [upComingMsg, setMessages, messages]);
@@ -87,19 +87,16 @@ const Chatbox = (props: Props) => {
     <section className="chatbox-section">
       <nav>
         <div className="display-flex">
-          <img
-            src={selected.img}
-            alt={react}
-          />
+          <img src={selected.img} alt={react} />
           <div className="selected-info">
-            <h5>{selected.name}</h5>
+            <h4>{selected.name}</h4>
             <div className="selected-email">{selected.email}</div>
           </div>
         </div>
         <div className="options-icons">
-          <MdPhone size={18}/>
-          <MdVideoCall size={18}/>
-          <HiDotsVertical size={18}/>
+          <MdPhone size={18} />
+          <MdVideoCall size={18} />
+          <HiDotsVertical size={18} />
         </div>
       </nav>
       <Messages messages={messages} />
