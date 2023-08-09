@@ -2,13 +2,12 @@ import { useRef, useState } from "react";
 import UseOnClickOutside from "../Utils/useOnClickOutside";
 import {HiDotsVertical} from 'react-icons/hi'
 import "./Chat.scss";
-import { User } from "../Types/types";
+import { useAppSelector } from "../hooks/useTypedSelector";
+import { userState } from "../features/Auth/AuthSlice";
 
-type Props = {
-  user: User | null;
-};
 
-const UserMe = ({ user }: Props) => {
+const UserMe = () => {
+  const {user} = useAppSelector(userState)
   const [show, setShow] = useState<Boolean>(false);
   const squareBoxRef = useRef<HTMLDivElement>(null);
 

@@ -1,56 +1,62 @@
 import { useEffect, useRef, useState } from "react";
 import react from "../assets/react.svg";
 import { Socket } from "socket.io-client";
-import { Message, User } from "../Types/types";
-import axios from "axios";
-import { sendMsgHost } from "../Utils/constants";
+import { Message } from "../Types/types";
 import Messages from "./Messages";
-import { fetchMsgs } from "../Utils/constants";
 import { MdPhone, MdVideoCall } from "react-icons/md";
-import {HiDotsVertical} from 'react-icons/hi'
+import { HiDotsVertical } from "react-icons/hi";
+import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
+import { userState } from "../features/Auth/AuthSlice";
+import {
+  MsgState,
+  fecthMessages,
+  sendMessage,
+  setMessages,
+} from "../features/Message/MessageSlice";
 
 type Props = {
-  selected: User | null;
-  user: User | null;
   socket: React.MutableRefObject<Socket | undefined>;
 };
 
 const Chatbox = (props: Props) => {
-  const { user, selected, socket } = props;
-  const [messages, setMessages] = useState<Array<Message>>();
+  const { socket } = props;
+  const { user } = useAppSelector(userState);
+  const { selected } = useAppSelector(MsgState);
   const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
   const msgRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchMsgs(user?._id, selected?._id)
-      .then((res) => setMessages(res))
-      .catch((err) => console.log(err));
-  }, [user, selected, setMessages, upComingMsg]);
+    if (user && selected) {
+      const msgArg = {
+        userId: user._id,
+        selectedId: selected._id,
+      };
+      dispatch(fecthMessages(msgArg));
+    }
+    // fetchMsgs(user?._id, selected?._id)
+    //   .then((res) => setMessages(res))
+    //   .catch((err) => console.log(err));
+  }, [user, selected, setMessages, upComingMsg, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.current?.emit("sendMsg", {
-      text: msgRef.current?.value,
-      sender: user?._id,
-      recieverId: selected?._id,
-    });
 
-    const response = await axios.post(sendMsgHost, {
-      text: msgRef.current?.value,
-      sender: user?._id,
-      reciever: selected?._id,
-    });
-    if (response.data) {
-      let newMsgArray: Message[];
-      if (!messages) {
-        newMsgArray = [response.data];
-      } else {
-        newMsgArray = [...messages];
-        newMsgArray.push(response.data);
-      }
-      setMessages(newMsgArray);
-    }
-    if (msgRef.current?.value) {
+    if (user && selected && msgRef.current?.value && msgRef.current?.value.length > 0) {
+      socket.current?.emit("sendMsg", {
+        text: msgRef.current.value,
+        sender: user._id,
+        recieverId: selected._id,
+      });
+
+      const msgArg = {
+        text: msgRef.current.value,
+        sender: user._id,
+        reciever: selected._id,
+      };
+
+      dispatch(sendMessage(msgArg));
+
       msgRef.current.value = "";
     }
   };
@@ -61,23 +67,22 @@ const Chatbox = (props: Props) => {
         message: data.message,
         isSenderMe: false,
       };
+
       setUpComingMsg(new_msg);
     });
   });
 
   useEffect(() => {
     if (upComingMsg) {
-      const newMsgArray = messages;
-
-      const new_msg = {
+      const new_msg: Message = {
         message: upComingMsg.message,
         isSenderMe: false,
       };
-      newMsgArray?.push(new_msg);
-      setMessages(newMsgArray); 
+
+      dispatch(setMessages(new_msg));
       setUpComingMsg(null);
     }
-  }, [upComingMsg, setMessages, messages]);
+  }, [upComingMsg, setMessages, dispatch]);
 
   if (!selected) {
     return <div className="nochat-div">No Chats</div>;
@@ -99,7 +104,7 @@ const Chatbox = (props: Props) => {
           <HiDotsVertical size={18} />
         </div>
       </nav>
-      <Messages messages={messages} />
+      <Messages />
       <form className="message-form" onSubmit={(e) => handleSubmit(e)}>
         <input type="text" ref={msgRef} placeholder="Send Message..." />
         <button>Send</button>

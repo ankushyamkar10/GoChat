@@ -1,24 +1,28 @@
-import { Message } from "../Types/types";
 import uniqid from "uniqid";
+import { useAppSelector } from "../hooks/useTypedSelector";
+import { MsgState } from "../features/Message/MessageSlice";
 
-type Props = {
-  messages: Array<Message> | undefined;
-};
-
-const Messages = (props: Props) => {
-  const { messages } = props;
+const Messages = () => {
+  const { coversation } = useAppSelector(MsgState);
 
   return (
     <div className="message-container">
-      {messages?.map(({ message, isSenderMe }) => {
-        return (
-          <div
-            key={uniqid()}
-            className={`display-flex justify-content-${isSenderMe ? 'right' : 'left'}`}
-          >
-            <div className="message">{message.text}</div>
-          </div>
-        );
+      {coversation?.map((messages) => {
+        if (messages) {
+          const { message, isSenderMe } = messages;
+          return (
+            <div
+              key={uniqid()}
+              className={`display-flex justify-content-${
+                isSenderMe ? "right" : "left"
+              }`}
+            >
+              <div className="message">
+                {message === null ? "loading" : message?.text}
+              </div>
+            </div>
+          );
+        }
       })}
     </div>
   );

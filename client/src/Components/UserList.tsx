@@ -1,32 +1,27 @@
 import { useEffect, useState } from "react";
-import { fetchUsers } from "../Utils/constants";
 import { useNavigate } from "react-router-dom";
 import { User } from "../Types/types";
 import GroupsList from "./Groups/GroupsList";
 import { MdMessage } from "react-icons/md";
-// import { HiUser, HiUserGroup } from "react-icons/hi";
-// import { MdPhone } from "react-icons/md";
+import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
+import { DataState, fetchUsers } from "../features/FetchData/FetchDataSlice";
+import { userState } from "../features/Auth/AuthSlice";
+import { setSelected } from "../features/Message/MessageSlice";
 
-type Props = {
-  user: User | null;
-  setSelected: (val: User) => void;
-};
-
-const UserList = ({ user, setSelected }: Props) => {
+const UserList = () => {
+  const { user } = useAppSelector(userState);
+  const { users } = useAppSelector(DataState);
+  const dispatch = useAppDispatch();
   const [tab, setTab] = useState<number>(0);
-  const [users, setUsers] = useState<Array<User>>();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) navigate("/login");
-    fetchUsers(user?._id)
-      .then((res) => setUsers(res))
-      .catch((err) => console.log(err));
+    else dispatch(fetchUsers(user));
   }, []);
 
   const handleClick = (user: User) => {
-    // joinRoom({ user, socket });
-    setSelected(user);
+    dispatch(setSelected(user));
   };
   return (
     <div>
@@ -68,7 +63,7 @@ const UserList = ({ user, setSelected }: Props) => {
             </div>
           </>
         ) : tab == 1 ? (
-          <GroupsList user={user} setSelected={setSelected}/>
+          <GroupsList  />
         ) : null}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import {  Message, User } from "../../Types/types";
+import { Message, User } from "../../Types/types";
 import messageService from "./MessageService";
 
 // const user = await JSON.parse(localStorage.getItem("user") as string);
@@ -12,7 +12,7 @@ type messageInitial = {
   isSuccess: Boolean;
   isLoading: Boolean;
   errMsg: string;
-  Messages: Message[];
+  coversation: Message[];
 };
 
 const initialState: messageInitial = {
@@ -21,18 +21,18 @@ const initialState: messageInitial = {
   isSuccess: false,
   isLoading: false,
   errMsg: "",
-  Messages: [],
+  coversation: [],
 };
 
 type fetchMsgProps = {
-  userId: string | undefined;
-  selectId: string | undefined;
+  userId: string;
+  selectedId: string;
 };
 
 type sendMsgProps = {
-  text: string | undefined;
-  sender: string | undefined;
-  reciever: string | undefined;
+  text: string ;
+  sender: string ;
+  reciever: string ;
 };
 
 export const fecthMessages = createAsyncThunk<Message[], fetchMsgProps>(
@@ -49,7 +49,7 @@ export const fecthMessages = createAsyncThunk<Message[], fetchMsgProps>(
   }
 );
 
-export const sendMessage = createAsyncThunk<Message[], sendMsgProps>(
+export const sendMessage = createAsyncThunk<Message, sendMsgProps>(
   "msg/sendMessages",
   async (sendMessageData, thunkAPI) => {
     try {
@@ -70,6 +70,9 @@ export const MessageSlice = createSlice({
     setSelected: (state, action) => {
       state.selected = action.payload;
     },
+    setMessages: (state, action) => {
+      state.coversation.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,9 +82,22 @@ export const MessageSlice = createSlice({
       .addCase(fecthMessages.fulfilled, (state, action) => {
         state.isSuccess = true;
         state.isLoading = false;
-        state.Messages = action.payload;
+        state.coversation = action.payload;
       })
       .addCase(fecthMessages.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.errMsg = action.payload as string;
+      })
+      .addCase(sendMessage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.coversation.push(action.payload);
+      })
+      .addCase(sendMessage.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.errMsg = action.payload as string;
@@ -90,5 +106,5 @@ export const MessageSlice = createSlice({
 });
 
 export const MsgState = (state: RootState) => state.msg;
-export const { setSelected } = MessageSlice.actions;
+export const { setSelected, setMessages } = MessageSlice.actions;
 export const MessageReducer = MessageSlice.reducer;

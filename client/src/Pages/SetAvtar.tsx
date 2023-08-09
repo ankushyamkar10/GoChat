@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import { useNavigate } from "react-router-dom";
-import { Group, User } from "../Types/types";
+// import { Group, User } from "../Types/types";
 import axios from "axios";
 import { setUserAvtarHost } from "../Utils/constants";
 import "./Avtar.scss";

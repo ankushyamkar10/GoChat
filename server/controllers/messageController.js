@@ -12,7 +12,7 @@ const sendMsg = asyncHandler(async (req, res) => {
         sender: sender
     })
     if (newMsg) {
-        res.status(201).json({ message: newMsg.message, isSenderMe: true })
+        res.status(200).json({ message: newMsg.message, isSenderMe: true })
     }
     else
         res.status(400).json({ msg: 'Failed to send msg' })

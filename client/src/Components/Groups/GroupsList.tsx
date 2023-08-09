@@ -1,26 +1,24 @@
 import { MdGroupAdd } from "react-icons/md";
 import "./Group.scss";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Group, User } from "../../Types/types";
-import { fetchGroups } from "../../Utils/constants";
+import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
+import {
+  DataState,
+  fetchGroups,
+} from "../../features/FetchData/FetchDataSlice";
+import { userState } from "../../features/Auth/AuthSlice";
 
-type Props = {
-  user: User | null;
-  setSelected: (val: User) => void;
-};
+const GroupsList = () => {
+  const { groups } = useAppSelector(DataState);
+  const { user } = useAppSelector(userState);
 
-const GroupsList = ({user}: Props) => {
-  const [groups, setGroups] = useState<Group[] | null>(null);
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    fetchGroups(user?._id)
-      .then((res) => {
-        setGroups(res);
-      })
-      .catch((e) => console.log(e));
+    if (user) dispatch(fetchGroups(user));
   }, []);
 
-  const handleClick = (group: Group) => {
+  const handleClick = () => {
     // joinRoom({ user, socket });
     // setSelected(group);
   };
@@ -30,7 +28,7 @@ const GroupsList = ({user}: Props) => {
       <ul>
         {groups?.map((group: Group) => {
           return (
-            <li key={group._id} onClick={() => handleClick(group)}>
+            <li key={group._id} onClick={() => handleClick()}>
               <img src={group.img} alt={group.img} />
               <h4>{group.name}</h4>
             </li>
