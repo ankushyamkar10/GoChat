@@ -8,14 +8,12 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, password, email } = req.body;
 
   if (!name || !password || !email) {
-    res.status(400);
-    throw new Error('Please fill all the details')
+    res.status(400).json({ message: "Please fill all the details" })
   }
 
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
-    throw new Error("User Already exists!");
+    res.status(400).json({ message: "User Already exists!" })
   }
 
   //hashing of password
@@ -40,8 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    res.status(400).json({ message: "Invalid user data!" });
   }
 
 })
@@ -51,8 +48,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { name, password } = req.body;
 
   if (!name || !password) {
-    res.status(400);
-    throw new Error("Please fill all the fields");
+    res.status(400).json({ message: "Please fill all the details!" })
   }
   const user = await User.findOne({ name });
 
@@ -69,12 +65,10 @@ const loginUser = asyncHandler(async (req, res) => {
       });
       console.log(`logged in as ${user.name}`);
     } else {
-      res.status(400);
-      throw new Error("Password does not matches...");
+      res.status(400).json({ message: "Password doesn't matches!" })
     }
   } else {
-    res.status(400);
-    throw new Error("User not found!");
+    res.status(400).json({ message: "User not found!" })
   }
 });
 
@@ -98,8 +92,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
   if (users)
     res.status(200).json(users)
   else {
-    res.status(400);
-    throw new Error("Users not found!");
+    res.status(400).json({ message: "Users not found!" })
   }
 
 })

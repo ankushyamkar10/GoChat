@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Auth.scss";
 import { RegisterData } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
 import { register, reset, userState } from "../features/Auth/AuthSlice";

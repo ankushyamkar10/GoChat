@@ -1,30 +1,32 @@
 import axios from "axios";
 import { loginHost, registerHost } from "../../Utils/constants";
 import { LoginData, RegisterData } from "../../Types/types";
+import { destroySession, setSession } from "../../Utils/SessionStorage";
 
 const register = async (userData: RegisterData) => {
-  const response = await axios.post(registerHost, userData);
+  try {
+    const response = await axios.post(registerHost, userData);
 
-  if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+    setSession("user", JSON.stringify(response.data));
+    return response.data;
+  } catch (error) {
+    return error;
   }
-
-  return await response.data;
 };
 
 const login = async (userData: LoginData) => {
-  const response = await axios.post(loginHost, userData);
-  console.log(response);
-  
-  if (await response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
-  }
+  try {
+    const response = await axios.post(loginHost, userData);
 
-  return await response.data;
+    setSession("user", JSON.stringify(response.data));
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 };
 
 const logout = async () => {
-  localStorage.removeItem("user");
+  destroySession("user");
 };
 
 const authService = { register, login, logout };

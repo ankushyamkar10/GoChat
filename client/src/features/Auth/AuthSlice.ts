@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { LoginData, RegisterData, User } from "../../Types/types";
 import authService from "./AuthService";
 import { RootState } from "../../app/store";
+import { getSession } from "../../Utils/SessionStorage";
 
-const user = await JSON.parse(localStorage.getItem("user") as string);
-// console.log("stringify user", user);
+const user = getSession("user");
 
 type authInitial = {
   user: User | null;
@@ -15,7 +15,7 @@ type authInitial = {
 };
 
 const initialState: authInitial = {
-  user: user ? user : null,
+  user: user ? JSON.parse(user) : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -89,6 +89,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
+        state.user.isAvtarSet = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;

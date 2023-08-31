@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import { useNavigate } from "react-router-dom";
-// import { Group, User } from "../Types/types";
 import axios from "axios";
 import { setUserAvtarHost } from "../Utils/constants";
-import "./Avtar.scss";
 import { useAppSelector } from "../hooks/useTypedSelector";
 import { userState } from "../features/Auth/AuthSlice";
+import { setSession } from "../Utils/SessionStorage";
 
 function convertToBase64(file: File | undefined) {
   return new Promise((resolve, reject) => {
@@ -53,10 +52,11 @@ const SetAvtar = () => {
   const [avtar, setAvtar] = useState<string[]>([]);
   const [selected, setSelected] = useState<string>("");
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     if (!user) navigate("/login");
     if (user?.isAvtarSet) navigate("/");
+
     getAllAvtars(api)
       .then((res) => setAvtar(res))
       .catch((error) => console.log(error));
@@ -71,8 +71,7 @@ const SetAvtar = () => {
     if (selected !== "")
       setUserAvtar(selected, user?._id, "user")
         .then((res) => {
-          console.log(res);
-          localStorage.setItem("user", JSON.stringify(res));
+          setSession("user", JSON.stringify(res));
           navigate("/");
         })
         .catch((e) => console.log(e));

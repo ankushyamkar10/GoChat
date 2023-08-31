@@ -4,14 +4,17 @@ const Groups = require('../models/groupSchema')
 const makeGroup = asyncHandler(async (req, res) => {
     const admin = req.params.id;
     const { name, desc, members } = req.body
+
     //member includes the sender
     if (!admin || !name || !Array.isArray(members) || members.length <= 0) {
         res.status(400)
         throw new Error("Not filled proper details")
     }
+    members.push(admin)
     const details = {
         name, admin, members
     }
+    
     if (desc && desc.length > 0)
         details['desc'] = desc
 
@@ -24,12 +27,13 @@ const makeGroup = asyncHandler(async (req, res) => {
             members: newGroup.members,
             isAvtarSet: newGroup.isAvtarSet,
             img: newGroup.img,
+            messages : newGroup.messages,
             createdAt: newGroup.createdAt
         }
         if (newGroup.desc?.length > 0)
             result.desc = newGroup.desc
 
-        res.status(201).json(result)
+        res.status(200).json(result)
     } else {
         res.status(400);
         throw new Error("Invalid data provided");

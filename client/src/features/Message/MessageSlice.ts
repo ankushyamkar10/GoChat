@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { Message, User } from "../../Types/types";
+import { Group, Message, User } from "../../Types/types";
 import messageService from "./MessageService";
 
 // const user = await JSON.parse(localStorage.getItem("user") as string);
 // console.log("stringify user", user);
 
 type messageInitial = {
-  selected: User | null;
+  selected: User | Group | null;
   isError: Boolean;
   isSuccess: Boolean;
   isLoading: Boolean;
@@ -30,9 +30,9 @@ type fetchMsgProps = {
 };
 
 type sendMsgProps = {
-  text: string ;
-  sender: string ;
-  reciever: string ;
+  text: string;
+  sender: string;
+  reciever: string;
 };
 
 export const fecthMessages = createAsyncThunk<Message[], fetchMsgProps>(
@@ -72,6 +72,7 @@ export const MessageSlice = createSlice({
     },
     setMessages: (state, action) => {
       state.coversation.push(action.payload);
+      
     },
   },
   extraReducers: (builder) => {
@@ -96,6 +97,7 @@ export const MessageSlice = createSlice({
         state.isSuccess = true;
         state.isLoading = false;
         state.coversation.push(action.payload);
+        
       })
       .addCase(sendMessage.rejected, (state, action) => {
         state.isError = true;

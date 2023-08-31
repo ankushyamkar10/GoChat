@@ -11,6 +11,7 @@ const groupSchema = mongoose.Schema({
     admin: {
         type: Array,
         required: true,
+        ref : 'User'
     },
     members: {
         type: Array,
@@ -23,6 +24,9 @@ const groupSchema = mongoose.Schema({
         type: String,
         required: true,
         default: "https://www.nicepng.com/png/detail/131-1318812_avatar-group-icon.png"
+    },
+    messages: {
+        type: Array,
     },
 }, {
     timestamps: true

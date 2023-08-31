@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginData } from "../Types/types";
+import { LoginData, User } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
 import { login, reset, userState } from "../features/Auth/AuthSlice";
-import "./Auth.scss";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const authState = useAppSelector(userState);
-
+  
   const [loginDetails, setLoginDetails] = useState<LoginData>({
-    name: "",
-    password: "",
+    name: "Ankush",
+    password: "123",
   });
 
   const { name, password } = loginDetails;
