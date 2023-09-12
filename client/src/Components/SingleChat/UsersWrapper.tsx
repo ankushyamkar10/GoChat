@@ -12,6 +12,7 @@ import {
   sendMessage,
   setMessages,
 } from "../../features/Message/MessageSlice";
+import MsgForm from "../MessageForm/MsgForm";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -35,32 +36,32 @@ const UsersWapper = (props: Props) => {
     }
   }, [user, selected, fecthMessages, dispatch]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (
-      user &&
-      selected &&
-      msgRef.current?.value &&
-      msgRef.current?.value.length > 0
-    ) {
-      socket.current?.emit("sendMsg", {
-        text: msgRef.current.value,
-        sender: user._id,
-        recieverId: selected._id,
-      });
+  //   if (
+  //     user &&
+  //     selected &&
+  //     msgRef.current?.value &&
+  //     msgRef.current?.value.length > 0
+  //   ) {
+  //     socket.current?.emit("sendMsg", {
+  //       text: msgRef.current.value,
+  //       sender: user._id,
+  //       recieverId: selected._id,
+  //     });
 
-      const msgArg = {
-        text: msgRef.current.value,
-        sender: user._id,
-        reciever: selected._id,
-      };
+  //     const msgArg = {
+  //       text: msgRef.current.value,
+  //       sender: user._id,
+  //       reciever: selected._id,
+  //     };
 
-      dispatch(sendMessage(msgArg));
+  //     dispatch(sendMessage(msgArg));
 
-      msgRef.current.value = "";
-    }
-  };
+  //     msgRef.current.value = "";
+  //   }
+  // };
 
   useEffect(() => {
     socket.current?.on("recieveMsg", (data: Message) => {
@@ -68,7 +69,7 @@ const UsersWapper = (props: Props) => {
         message: data.message,
         isSenderMe: false,
       };
-      console.log(data)
+      console.log(data);
       setUpComingMsg(new_msg);
     });
   });
@@ -102,10 +103,7 @@ const UsersWapper = (props: Props) => {
         </div>
       </nav>
       <Messages />
-      <form className="message-form" onSubmit={(e) => handleSubmit(e)}>
-        <input type="text" ref={msgRef} placeholder="Send Message..." />
-        <button>Send</button>
-      </form>
+      <MsgForm socket={socket} selected={selected} />
     </section>
   );
 };
