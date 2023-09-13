@@ -62,12 +62,12 @@ const GroupsWrapper = (props: Props) => {
       };
 
       dispatch(sendMessage(msgArg));
-      dispatch(
-        fecthMessages({
-          userId: user._id,
-          selectedId: selected._id,
-        })
-      );
+      // dispatch(
+      //   fecthMessages({
+      //     userId: user._id,
+      //     selectedId: selected._id,
+      //   })
+      // );
       msgRef.current.value = "";
     }
   };
@@ -113,10 +113,6 @@ const GroupsWrapper = (props: Props) => {
         </div>
       </nav>
       <Messages />
-      <form className="message-form" onSubmit={(e) => handleSubmit(e)}>
-        <input type="text" ref={msgRef} placeholder="Send Message..." />
-        <button>Send</button>
-      </form>
     </section>
   );
 };

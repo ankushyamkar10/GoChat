@@ -2,12 +2,12 @@ import React, { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
 import { userState } from "../../features/Auth/AuthSlice";
 import { sendMessage } from "../../features/Message/MessageSlice";
-import { User } from "../../Types/types";
+import { Group, User } from "../../Types/types";
 import { Socket } from "socket.io-client";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
-  selected: User;
+  selected: User | Group | null;
 };
 
 function MsgForm({ socket, selected }: Props) {

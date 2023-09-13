@@ -6,6 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const dotenv = require('dotenv').config()
 const colors = require("colors");
+const path = require('path')
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db')
 
@@ -20,7 +21,7 @@ const { log, group } = require('console');
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5173',
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PATCH","PUT","DELETE"],
     credentials: true
   }
 });
@@ -64,7 +65,13 @@ io.on('connection', (socket) => {
     }
     else
       socket.in(recieverId).emit('recieveMsg', { message: { text } });
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   })
 
 });

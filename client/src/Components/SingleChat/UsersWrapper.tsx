@@ -101,11 +101,21 @@ const UsersWapper = (props: Props) => {
           <HiDotsVertical size={18} />
         </div>
       </nav>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
       <Messages />
       <form className="message-form" onSubmit={(e) => handleSubmit(e)}>
         <input type="text" ref={msgRef} placeholder="Send Message..." />
         <button>Send</button>
       </form>
+=======
+=======
+>>>>>>> Stashed changes
+      <div className="message-conatiner-main">
+        <Messages />
+      </div>
+      <MsgForm socket={socket} selected={selected} />
+>>>>>>> Stashed changes
     </section>
   );
 };
