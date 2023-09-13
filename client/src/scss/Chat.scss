@@ -4,51 +4,43 @@
   height: 100vh;
 }
 
-.chatbox-section::-webkit-scrollbar {
+.message-container-main {
+  overflow-y: scroll;
+  height: calc(100vh - 97px);
+  .message-container {
+    margin-top: 0.5rem;
+    padding: 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .message {
+      width: fit-content;
+      max-width: 70%;
+      background: rgb(85, 237, 85);
+      color: rgb(14, 17, 20);
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      margin: 0.2rem 0;
+    }
+    .bg-SenderMe {
+      background: rgb(85, 237, 85);
+    }
+    .bg-SenderNotMe {
+      background: rgb(164, 129, 129);
+    }
+  }
+}
+
+.message-container-main::-webkit-scrollbar {
   width: 5px;
 }
-.chatbox-section::-webkit-scrollbar-track {
+.message-container-main::-webkit-scrollbar-track {
   background: transparent;
 }
-.chatbox-section::-webkit-scrollbar-thumb {
-  background-color: blue;
-  border-radius: 20px;
-  border: 3px solid orange;
-}
-
-.message-container {
-  margin-top: 0.5rem;
-  padding: 0 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  .message {
-    width: fit-content;
-    max-width: 70%;
-    background: rgb(85, 237, 85);
-    color: rgb(14, 17, 20);
-    padding: 0.2rem 0.5rem;
-    border-radius: 5px;
-    margin: 0.2rem 0;
-  }
-  .bg-SenderMe {
-    background: rgb(85, 237, 85);
-  }
-  .bg-SenderNotMe {
-    background: rgb(164, 129, 129);
-  }
-}
-
-.chatbox-section::-webkit-scrollbar {
-  width: 5px;
-}
-.chatbox-section::-webkit-scrollbar-track {
-  background: transparent;
-}
-.chatbox-section::-webkit-scrollbar-thumb {
+.message-container-main::-webkit-scrollbar-thumb {
   background-color: blue;
   border-radius: 20px;
   border: 3px solid orange;
@@ -110,9 +102,8 @@
   width: 75vw;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   position: relative;
-
   // position: relative;
 
   nav {

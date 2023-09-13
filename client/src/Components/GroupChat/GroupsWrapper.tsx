@@ -12,6 +12,7 @@ import {
 } from "../../features/Message/MessageSlice";
 import { DataState } from "../../features/FetchData/FetchDataSlice";
 import Messages from "../Messages/Messages";
+import MsgForm from "../MessageForm/MsgForm";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -114,7 +115,10 @@ const GroupsWrapper = (props: Props) => {
           <HiDotsVertical size={18} />
         </div>
       </nav>
-      <Messages />
+      <div className="message-container-main">
+        <Messages />
+      </div>
+      <MsgForm socket={socket} selected={selected} />
     </section>
   );
 };
