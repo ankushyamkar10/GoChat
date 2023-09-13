@@ -65,13 +65,6 @@ io.on('connection', (socket) => {
     }
     else
       socket.in(recieverId).emit('recieveMsg', { message: { text } });
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   })
 
 });

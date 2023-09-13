@@ -4,6 +4,44 @@
   height: 100vh;
 }
 
+.chatbox-section::-webkit-scrollbar {
+  width: 5px;
+}
+.chatbox-section::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chatbox-section::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 20px;
+  border: 3px solid orange;
+}
+
+.message-container {
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .message {
+    width: fit-content;
+    max-width: 70%;
+    background: rgb(85, 237, 85);
+    color: rgb(14, 17, 20);
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    margin: 0.2rem 0;
+  }
+  .bg-SenderMe {
+    background: rgb(85, 237, 85);
+  }
+  .bg-SenderNotMe {
+    background: rgb(164, 129, 129);
+  }
+}
+
 .user-groups-tabs {
   display: flex;
   border-bottom: 1px solid rgba(134, 150, 160, 0.15);
@@ -21,28 +59,23 @@
     }
   }
 }
-
 .bb {
   border-bottom: 2px solid rgb(85, 237, 85);
 }
-
+.justify-content-right {
+  justify-content: flex-end;
+}
+.justify-content-left {
+  justify-content: flex-start;
+}
 .chatbox-section {
   width: 75vw;
   display: flex;
   flex-direction: column;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   overflow-y: scroll;
   position: relative;
-=======
-=======
->>>>>>> Stashed changes
-  // position: relative;
->>>>>>> Stashed changes
 
   nav {
-    position: fixed;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -81,7 +114,6 @@
     width: 100%;
     display: flex;
     margin-bottom: 2px;
-    padding-top: 0.5rem;
     input {
       outline: none;
       flex: 1;
@@ -100,49 +132,6 @@
       margin-right: 1rem;
     }
   }
-
-  .message-conatiner-main {
-    overflow-y: scroll;
-    top: 3.25rem;
-    // padding: 1rem 0;
-    height: calc(100vh - 97px);
-
-    .message-container {
-      margin-top: 0.5rem;
-      padding: 0 1rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-
-      .message {
-        width: fit-content;
-        max-width: 70%;
-        background: rgb(85, 237, 85);
-        color: rgb(14, 17, 20);
-        padding: 0.2rem 0.5rem;
-        border-radius: 5px;
-        margin: 0.2rem 0;
-      }
-      .bg-SenderMe {
-        background: rgb(85, 237, 85);
-      }
-      .bg-SenderNotMe {
-        background: rgb(164, 129, 129);
-      }
-    }
-  }
-  .message-conatiner-main::-webkit-scrollbar {
-    width: 4px;
-  }
-  .message-conatiner-main::-webkit-scrollbar-track {
-    background: rgb(86 89 92 / 50%)
-  }
-  .message-conatiner-main::-webkit-scrollbar-thumb {
-    background-color: white;
-    border-radius: 20px;
-  }
 }
 .nochat-div {
   display: flex;
@@ -152,7 +141,7 @@
 }
 .contacts {
   width: 25vw;
-  height: 100vh;
+  height: calc(100vh - 53.5px);
   border-right: 1px solid rgba(134, 150, 160, 0.15);
   position: relative;
 }
@@ -253,11 +242,4 @@
       color: #0e1114;
     }
   }
-}
-
-.justify-content-right {
-  justify-content: flex-end;
-}
-.justify-content-left {
-  justify-content: flex-start;
 }
