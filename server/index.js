@@ -6,6 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const dotenv = require('dotenv').config()
 const colors = require("colors");
+const path = require('path')
 const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db')
 
@@ -21,7 +22,7 @@ const { log } = require('console');
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5173',
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PATCH","PUT","DELETE"],
     credentials: true
   }
 });
