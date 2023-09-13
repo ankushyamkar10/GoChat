@@ -102,7 +102,9 @@ const UsersWapper = (props: Props) => {
           <HiDotsVertical size={18} />
         </div>
       </nav>
-      <Messages />
+      <div className="message-container-main">
+        <Messages />
+      </div>
       <MsgForm socket={socket} selected={selected} />
     </section>
   );
