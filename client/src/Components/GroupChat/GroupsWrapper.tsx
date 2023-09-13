@@ -73,6 +73,8 @@ const GroupsWrapper = (props: Props) => {
   };
   useEffect(() => {
     socket.current?.on("recieveMsg", (data: Message) => {
+      console.log(data);
+
       const new_msg = {
         message: data.message,
         isSenderMe: false,
