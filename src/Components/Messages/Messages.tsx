@@ -2,6 +2,7 @@ import uniqid from "uniqid";
 import { useAppSelector } from "../../hooks/useTypedSelector";
 import { MsgState } from "../../features/Message/MessageSlice";
 import { DataState } from "../../features/FetchData/FetchDataSlice";
+import { userProfile } from "../../Types/types";
 
 type Props = {
   isGroup: Boolean;
@@ -10,7 +11,6 @@ type Props = {
 const Messages = ({ isGroup }: Props) => {
   const { conversation } = useAppSelector(MsgState);
   const { users } = useAppSelector(DataState);
-  console.log(conversation);
 
   return (
     <div className="message-container">
@@ -18,11 +18,13 @@ const Messages = ({ isGroup }: Props) => {
         conversation.map((messages) => {
           if (messages) {
             const { message, isSenderMe, sender } = messages;
-            let img;
+            let img: string | userProfile = "";
+            let filteredUser;
             if (isGroup) {
-              img = users.filter((user) => user._id === sender);
-              img = img.length === 1 ? img[0].img : undefined;
+              filteredUser = users.filter((user) => user._id === sender);
+              img = filteredUser.length === 1 ? filteredUser[0].img : "";
             }
+
             return (
               <div
                 key={uniqid()}
@@ -32,7 +34,7 @@ const Messages = ({ isGroup }: Props) => {
               >
                 {isGroup && !isSenderMe && (
                   <img
-                    src={img}
+                    src={typeof img === "string" ? img : img.image_url}
                     height={6}
                     width={6}
                     className="message-sender-img"
@@ -43,7 +45,12 @@ const Messages = ({ isGroup }: Props) => {
                     isSenderMe ? "bg-senderMe" : "bg-SenderNotMe"
                   }`}
                 >
-                  {message !== null && message?.text}
+                  {!isSenderMe && (
+                    <div className="sender">
+                      {filteredUser && "~" + filteredUser[0]?.name}
+                    </div>
+                  )}
+                  <div className="message-text">{message.text}</div>
                 </div>
               </div>
             );

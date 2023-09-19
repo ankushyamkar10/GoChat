@@ -11,7 +11,7 @@
     margin-top: 0.5rem;
     padding: 0 1rem;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -19,21 +19,30 @@
     .message {
       width: fit-content;
       max-width: 70%;
-      background: rgb(85, 237, 85);
-      color: rgb(14, 17, 20);
-      padding: 0.2rem 0.5rem;
+      background: #84e787;
+      padding: 0.4rem 0.6rem;
       border-radius: 5px;
-      margin: 0.2rem 0;
+      margin: 0.5rem 0;
+      letter-spacing: 0.5px;
+
+      .sender {
+        font-size: 9px;
+        font-weight: 300;
+      }
+      .message-text {
+        color: rgb(14, 17, 20);
+      }
     }
     .bg-SenderMe {
       background: rgb(85, 237, 85);
+      color: rgb(14, 17, 20);
     }
     .bg-SenderNotMe {
       background: rgb(164, 129, 129);
     }
     .message-sender-img {
-      width: 1.3rem !important;
-      height: 1.3rem !important;
+      width: 2rem !important;
+      height: 2rem !important;
     }
   }
 }
@@ -232,10 +241,14 @@
   border-bottom: 1px solid rgba(134, 150, 160, 0.15);
   .user-image {
     display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    align-items: center;
   }
   img {
     height: 2.2rem;
     width: 2.2rem;
+    border-radius: 100%;
   }
   .icons {
     display: flex;

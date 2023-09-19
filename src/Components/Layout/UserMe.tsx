@@ -26,7 +26,11 @@ const UserMe = () => {
   return (
     <div className="user-me">
       <div className="user-image">
-        <img src={user?.img} alt="DP" />
+        <img
+          src={typeof user?.img === "string" ? user?.img : user?.img.image_url}
+          alt="DP"
+        />
+        <span>{user?.name}</span>
       </div>
       <div className="icons" onClick={() => setShow(!show)} ref={squareBoxRef}>
         <HiDotsVertical size={20} />

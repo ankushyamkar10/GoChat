@@ -19,7 +19,6 @@ const UsersList = (props: Props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  
   useEffect(() => {
     if (!user) navigate("/login");
     else dispatch(fetchUsers(user));
@@ -34,7 +33,14 @@ const UsersList = (props: Props) => {
         {users?.map((currUser: User) => {
           return (
             <li key={currUser._id} onClick={() => handleClick(currUser)}>
-              <img src={currUser.img} alt={currUser.img} />
+              <img
+                src={
+                  typeof currUser.img === "string"
+                    ? currUser.img
+                    : currUser.img.image_url
+                }
+                alt="user image"
+              />
               <h4>{currUser.name}</h4>
             </li>
           );

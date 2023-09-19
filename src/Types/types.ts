@@ -1,9 +1,14 @@
+export interface userProfile {
+  image_url: string;
+  public_id: string;
+}
+
 export interface User {
   _id: string;
   name: string;
   token: string;
   isAvtarSet: Boolean;
-  img: string;
+  img: string | userProfile;
   email: string;
 }
 

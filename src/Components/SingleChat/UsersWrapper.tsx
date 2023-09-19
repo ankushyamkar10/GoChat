@@ -99,7 +99,14 @@ const UsersWapper = (props: Props) => {
     <section className="chatbox-section">
       <nav>
         <div className="display-flex">
-          <img src={selected.img} alt={react} />
+          <img
+            src={
+              typeof selected?.img === "string"
+                ? selected?.img
+                : selected?.img.image_url
+            }
+            alt={react}
+          />
           <div className="selected-info">
             <h4>{selected.name}</h4>
             <div className="selected-email">{selected.email}</div>
