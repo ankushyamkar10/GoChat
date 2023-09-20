@@ -7,11 +7,13 @@ import Contacts from "../Components/Layout/Contacts";
 import UserMe from "../Components/Layout/UserMe";
 import { useAppSelector } from "../hooks/useTypedSelector";
 import { userState } from "../features/Auth/AuthSlice";
-import CloudImage from "../Components/CloudImage";
+import ModalWrapper from "../Components/Config/ModalWrapper";
+import { ModalState } from "../features/Modal/ModalSlice";
 
 const Chat = () => {
   const { user } = useAppSelector(userState);
   const socket: React.MutableRefObject<Socket | undefined> = useRef<Socket>();
+  const { isOpen } = useAppSelector(ModalState);
 
   useEffect(() => {
     socket.current = io(backendHost);
@@ -22,6 +24,7 @@ const Chat = () => {
     return (
       <div>
         {/* <Navbar /> */}
+        {isOpen && <ModalWrapper userType="users" />}
         <div className="chats-screen">
           <div className="contacts">
             <UserMe />
@@ -31,8 +34,6 @@ const Chat = () => {
         </div>
       </div>
     );
-  } else {
-    return <CloudImage />;
   }
 };
 export default Chat;

@@ -7,7 +7,7 @@ type fetchMsgProps = {
 };
 
 type sendMsgProps = {
-  text: string | undefined;
+  message: { text: string; time_stamp: string };
   sender: string | undefined;
   reciever: string | undefined;
 };
@@ -23,21 +23,10 @@ const fetchMsgs = async ({ userId, selectedId }: fetchMsgProps) => {
   }
 };
 
-const fecthGroupsMessages = async ({ userId, selectedId }: fetchMsgProps) => {
-  try {
-    const response = await axios.post(getMsgsHost, {
-      from: userId,
-      to: selectedId,
-    });
-    return response.data;
-  } catch (error) {
-    return null;
-  }
-};
-const sendMsg = async ({ text, sender, reciever }: sendMsgProps) => {
+const sendMsg = async ({ message, sender, reciever }: sendMsgProps) => {
   try {
     const response = await axios.post(sendMsgHost, {
-      text,
+      message,
       sender,
       reciever,
     });

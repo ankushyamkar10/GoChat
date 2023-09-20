@@ -21,6 +21,8 @@ const login = async (userData: LoginData) => {
     setSession("user", JSON.stringify(response.data));
     return response.data;
   } catch (error) {
+    console.log(error);
+
     return error;
   }
 };

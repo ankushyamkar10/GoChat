@@ -10,7 +10,6 @@ import { userState } from "../../features/Auth/AuthSlice";
 import {
   MsgState,
   fecthMessages,
-  sendMessage,
   setMessages,
 } from "../../features/Message/MessageSlice";
 import MsgForm from "../MessageForm/MsgForm";
@@ -82,7 +81,6 @@ const UsersWapper = (props: Props) => {
         isSenderMe: false,
         sender: data.sender,
       };
-      console.log(new_msg);
 
       setUpComingMsg(new_msg);
     });
@@ -111,11 +109,6 @@ const UsersWapper = (props: Props) => {
             <h4>{selected.name}</h4>
             <div className="selected-email">{selected.email}</div>
           </div>
-        </div>
-        <div className="options-icons">
-          <MdPhone size={18} />
-          <MdVideoCall size={18} />
-          <HiDotsVertical size={18} />
         </div>
       </nav>
       <div className="message-container-main" ref={msgContainerRef}>

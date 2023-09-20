@@ -30,7 +30,7 @@ type fetchMsgProps = {
 };
 
 type sendMsgProps = {
-  text: string;
+  message: { text: string; time_stamp: string };
   sender: string;
   reciever: string;
 };

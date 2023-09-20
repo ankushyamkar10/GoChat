@@ -1,43 +1,37 @@
 import { MdGroupAdd } from "react-icons/md";
-import "../../scss/Group.scss";
-import { useEffect } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
-import { DataState, fetchGroups } from "../../features/FetchData/FetchDataSlice";
-import { userState } from "../../features/Auth/AuthSlice";
+import { DataState } from "../../features/FetchData/FetchDataSlice";
 import { Group } from "../../Types/types";
 import { setSelected } from "../../features/Message/MessageSlice";
-import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
 };
 
-const GroupsList = (props:Props) => {
+const GroupsList = (props: Props) => {
+  const [search, setSearch] = useState("");
   const { groups } = useAppSelector(DataState);
-  const { user } = useAppSelector(userState);
-  const { socket } = props;
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else if (groups.length == 0) dispatch(fetchGroups(user));
-    else {
-      groups.forEach((grp) => {
-        socket.current?.emit("joinGroup", grp._id);
-      });
-    }
-  }, []);
-
   const handleClick = (group: Group) => {
-    // joinRoom({ user, socket });
     dispatch(setSelected(group));
   };
 
   return (
     <section className="groups_sidebar">
+      <div className="input-search">
+        <input
+          type="text"
+          className="search-users"
+          name="name"
+          value={search}
+          placeholder="Search a Group"
+          autoComplete="off"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <ul>
         {groups?.map((group: Group) => {
           return (

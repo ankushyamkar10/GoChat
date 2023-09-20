@@ -36,6 +36,7 @@ export interface RegisterData {
 export interface Message {
   message: {
     text: string;
+    time_stamp: string;
   };
   sender: string;
   isSenderMe: Boolean;

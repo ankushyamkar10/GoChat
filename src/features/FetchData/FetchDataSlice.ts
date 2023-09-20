@@ -10,6 +10,7 @@ type Data = {
   isSuccess: Boolean;
   isLoading: Boolean;
   errMsg: string;
+  knownUser: User[];
 };
 
 const initialState: Data = {
@@ -19,6 +20,7 @@ const initialState: Data = {
   isSuccess: false,
   isLoading: false,
   errMsg: "",
+  knownUser: [],
 };
 
 export const fetchUsers = createAsyncThunk<User[], User>(
@@ -52,7 +54,12 @@ export const fetchGroups = createAsyncThunk<Group[], User>(
 export const DataSlice = createSlice({
   name: "data",
   initialState,
-  reducers: {},
+  reducers: {
+    addUser(state, action) {
+      if (state.knownUser.includes(action.payload))
+        state.knownUser.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -85,4 +92,5 @@ export const DataSlice = createSlice({
 });
 
 export const DataState = (state: RootState) => state.data;
+export const { addUser } = DataSlice.actions;
 export const DataReducer = DataSlice.reducer;

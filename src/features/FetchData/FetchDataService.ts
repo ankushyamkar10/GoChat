@@ -5,7 +5,6 @@ const fetchUsers = async (user_id: string) => {
   try {
     const response = await axios.get(allUsersHost + "/" + user_id);
     return response.data;
-    
   } catch (error) {
     return null;
   }

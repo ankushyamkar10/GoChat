@@ -5,7 +5,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
-  color: white;
   position: relative;
 }
 
@@ -20,6 +19,7 @@ $hover: rgba(
 $border: 1px solid rgba(134, 150, 160, 0.15);
 body {
   background: $midnight;
+  color: white;
 }
 
 //navbar

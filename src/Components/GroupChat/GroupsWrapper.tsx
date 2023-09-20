@@ -123,11 +123,6 @@ const GroupsWrapper = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="options-icons">
-          <MdPhone size={18} />
-          <MdVideoCall size={18} />
-          <HiDotsVertical size={18} />
-        </div>
       </nav>
       <div className="message-container-main" ref={msgContainerRef}>
         <Messages isGroup={true} />

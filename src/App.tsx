@@ -4,8 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Chat from "./Pages/Home";
 import Login from "./Pages/Login";
 import Regsiter from "./Pages/Regsiter";
-import SetAvtar from "./Pages/SetAvtar";
-import Layout from "./Components/Layout/Layout";
+import CloudImage from "./Components/Config/CloudImage";
+import Protect from "./Components/Config/Protect";
 
 function App() {
   return (
@@ -18,12 +18,12 @@ function App() {
             <Route
               index
               element={
-                <Layout>
+                <Protect>
                   <Chat />
-                </Layout>
+                </Protect>
               }
             ></Route>
-            <Route path="/setAvtar" element={<SetAvtar />}></Route>
+            <Route path="/setAvtar" element={<CloudImage />}></Route>
           </Routes>
         </div>
       </BrowserRouter>

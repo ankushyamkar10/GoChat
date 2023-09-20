@@ -27,7 +27,7 @@ const UserMe = () => {
     <div className="user-me">
       <div className="user-image">
         <img
-          src={typeof user?.img === "string" ? user?.img : user?.img.image_url}
+          src={typeof user?.img === "string" ? user?.img : user?.img?.image_url}
           alt="DP"
         />
         <span>{user?.name}</span>

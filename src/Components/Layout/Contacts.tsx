@@ -14,30 +14,19 @@ const Contacts = (props: Props) => {
   return (
     <div>
       <div className="user-groups-tabs">
-        <div
-          className={`users-tab ${tab == 0 && "bb"}`}
-          onClick={() => setTab(0)}
-        >
+        <div className={` ${tab == 0 && "bb"}`} onClick={() => setTab(0)}>
           Users
         </div>
-        <div
-          className={`groups-tab ${tab == 1 && "bb"}`}
-          onClick={() => setTab(1)}
-        >
+        <div className={` ${tab == 1 && "bb"}`} onClick={() => setTab(1)}>
           Groups
         </div>
-        <div
-          className={`calls-tab ${tab == 2 && "bb"}`}
-          onClick={() => setTab(2)}
-        >
-          Calls
-        </div>
       </div>
-      <div className="users_list">
+
+      <div className="contacts_list">
         {tab == 0 ? (
-          <UsersList socket={socket} />
+          <UsersList />
         ) : tab == 1 ? (
-          <GroupsList socket={socket}/>
+          <GroupsList socket={socket} />
         ) : null}
       </div>
     </div>

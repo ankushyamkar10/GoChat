@@ -24,14 +24,25 @@ function MsgForm({ socket, selected }: Props) {
       msgRef.current?.value &&
       msgRef.current?.value.length > 0
     ) {
+      const time = new Date();
+      const hours = time.getHours() <= 9 ? "0" : "" + time.getHours();
+      const minutes = time.getMinutes() <= 9 ? "0" : "" + time.getMinutes();
+      const time_stamp = hours + ":" + minutes;
+
       socket.current?.emit("sendMsg", {
-        text: msgRef.current.value,
+        data: {
+          text: msgRef.current.value.trim(),
+          time_stamp: time_stamp,
+        },
         sender: user._id,
         recieverId: selected._id,
       });
 
       const msgArg = {
-        text: msgRef.current.value,
+        message: {
+          text: msgRef.current.value,
+          time_stamp: time_stamp,
+        },
         sender: user._id,
         reciever: selected._id,
       };
@@ -42,7 +53,28 @@ function MsgForm({ socket, selected }: Props) {
   };
   return (
     <form className="message-form" onSubmit={(e) => handleSubmit(e)}>
-      <input type="text" ref={msgRef} placeholder="Send Message..." />
+      <input
+        type="text"
+        ref={msgRef}
+        placeholder="Send Message..."
+        // onKeyDown={(e) => {
+        //   if (e.key === "Enter" && e.shiftKey) {
+        //     e.preventDefault();
+        //     if (msgRef.current) {
+        //       e.preventDefault();
+        //       const cursorPosition = e.currentTarget.selectionStart || 0;
+        //       const newValue =
+        //         msgRef.current.value.substring(0, cursorPosition) +
+        //         "\n" +
+        //         msgRef.current.value.substring(cursorPosition);
+        //       // Update the input value
+        //       console.log(newValue);
+
+        //       msgRef.current.value = newValue;
+        //     }
+        //   }
+        // }}
+      />
       <button>Send</button>
     </form>
   );

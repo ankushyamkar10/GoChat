@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useAppSelector } from "../hooks/useTypedSelector";
-import { userState } from "../features/Auth/AuthSlice";
-import { setUserAvtarHost } from "../Utils/constants";
+import { useAppSelector } from "../../hooks/useTypedSelector";
+import { userState } from "../../features/Auth/AuthSlice";
+import { setUserAvtarHost } from "../../Utils/constants";
 import axios from "axios";
-import { setSession } from "../Utils/SessionStorage";
+import { setSession } from "../../Utils/SessionStorage";
 
 const setUserAvtar = async (
-  selected: File | undefined,
+  selected: string | undefined,
   userId: string | undefined,
   decider: string
 ) => {
@@ -19,35 +19,54 @@ const setUserAvtar = async (
   }
 };
 
+function convertToBase64(file: File | undefined) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    if (file) {
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    }
+    return "";
+  });
+}
+
 const CloudImage = () => {
-  const [image, setImage] = useState<File | null>();
+  const [image, setImage] = useState<string>("");
   const { user } = useAppSelector(userState);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target) {
       let newFile: File | undefined = e.target.files?.[0];
       var blob = newFile?.slice(0, newFile?.size, "image/png");
       if (blob) {
         newFile = new File([blob], `${user?.name}.png`, { type: "image/png" });
-        setImage(newFile);
+        const base64 = await convertToBase64(newFile);
+        base64?.toString();
+        if (typeof base64 === "string") setImage(base64);
       }
     }
   };
 
   const handleSubmit = (e?: React.FormEvent<Element>) => {
     e?.preventDefault();
-    if (image !== null)
+    if (image !== null) {
       setUserAvtar(image, user?._id, "user")
         .then((res) => {
           setSession("user", JSON.stringify(res));
           window.location.href = "/";
         })
         .catch((e) => console.log(e));
+    }
   };
   return (
     <div>
       <input type="file" onChange={(e) => handleChange(e)} />
-      <button onClick={handleSubmit}></button>
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };

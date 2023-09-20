@@ -50,7 +50,11 @@ const Messages = ({ isGroup }: Props) => {
                       {filteredUser && "~" + filteredUser[0]?.name}
                     </div>
                   )}
+
                   <div className="message-text">{message.text}</div>
+                  <div className="message-time-stamp">
+                    {message?.time_stamp}
+                  </div>
                 </div>
               </div>
             );
