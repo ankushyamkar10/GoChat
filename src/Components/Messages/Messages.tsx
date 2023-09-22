@@ -1,8 +1,9 @@
 import uniqid from "uniqid";
 import { useAppSelector } from "../../hooks/useTypedSelector";
 import { MsgState } from "../../features/Message/MessageSlice";
-import { DataState } from "../../features/FetchData/FetchDataSlice";
 import { userProfile } from "../../Types/types";
+import { useContext } from "react";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
   isGroup: Boolean;
@@ -10,7 +11,8 @@ type Props = {
 
 const Messages = ({ isGroup }: Props) => {
   const { conversation } = useAppSelector(MsgState);
-  const { users } = useAppSelector(DataState);
+  // const { users } = useAppSelector(DataState);
+  const { users } = useContext(FetchDataContext);
 
   return (
     <div className="message-container">

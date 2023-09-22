@@ -7,7 +7,7 @@ import { logout, userState } from "../../features/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
 
 const UserMe = () => {
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const [show, setShow] = useState<Boolean>(false);
   const squareBoxRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -27,10 +27,14 @@ const UserMe = () => {
     <div className="user-me">
       <div className="user-image">
         <img
-          src={typeof user?.img === "string" ? user?.img : user?.img?.image_url}
+          src={
+            typeof loggedInUser?.img === "string"
+              ? loggedInUser?.img
+              : loggedInUser?.img?.image_url
+          }
           alt="DP"
         />
-        <span>{user?.name}</span>
+        <span>{loggedInUser?.name}</span>
       </div>
       <div className="icons" onClick={() => setShow(!show)} ref={squareBoxRef}>
         <HiDotsVertical size={20} />

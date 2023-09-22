@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginData, User } from "../Types/types";
+import { LoginData } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
 import { login, reset, userState } from "../features/Auth/AuthSlice";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const authState = useAppSelector(userState);
-  
+  const { loggedInUser, isSuccess } = useAppSelector(userState);
+
   const [loginDetails, setLoginDetails] = useState<LoginData>({
     name: "Ankush",
     password: "123",
@@ -17,9 +17,9 @@ const Login: React.FC = () => {
   const { name, password } = loginDetails;
 
   useEffect(() => {
-    if (authState.user || authState.isSuccess) navigate("/");
+    if (loggedInUser || isSuccess) navigate("/");
     dispatch(reset());
-  }, [authState.user, authState.isSuccess, dispatch, navigate]);
+  }, [loggedInUser, isSuccess, dispatch, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
@@ -27,8 +27,8 @@ const Login: React.FC = () => {
     if (name !== "" && password !== "") {
       dispatch(login(loginDetails));
 
-      if (authState.isSuccess) {
-        if (!authState.user?.isAvtarSet) {
+      if (isSuccess) {
+        if (!loggedInUser?.isAvtarSet) {
           navigate("/setAvtar");
         } else {
           navigate("/chat");

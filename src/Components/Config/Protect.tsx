@@ -7,12 +7,12 @@ type Props = {
 };
 
 const Protect = ({ children }: Props) => {
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
 
-  if (!user) {
+  if (!loggedInUser && typeof loggedInUser === null) {
     window.location.href = "/login";
     return;
-  } else if (!user.isAvtarSet) {
+  } else if (loggedInUser && !loggedInUser.isAvtarSet) {
     window.location.href = "/setAvtar";
   }
   return <div>{children}</div>;

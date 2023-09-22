@@ -1,80 +1,75 @@
 import { Modal } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks/useTypedSelector";
-import { DataState, addUser } from "../../features/FetchData/FetchDataSlice";
 import { User } from "../../Types/types";
-import { ModalState, handleOpen } from "../../features/Modal/ModalSlice";
+import { ModalState, handleAddUserOpen } from "../../features/Modal/ModalSlice";
 import "./Config.scss";
+import { userState } from "../../features/Auth/AuthSlice";
+import { MdPersonAdd } from "react-icons/md";
+import { Socket } from "socket.io-client";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
-  userType: String;
+  socket: React.MutableRefObject<Socket | undefined>;
 };
 
-const ModalWrapper = ({ userType }: Props) => {
-  const [addedUsers, setAddedUsers] = useState<User[]>([]);
-  const [formData, setFormData] = useState({
-    email: "",
+const ModalWrapper = ({ socket }: Props) => {
+  const [name, setName] = useState("");
+  // const { users } = useAppSelector(DataState);
+  const { users } = useContext(FetchDataContext);
+  const { isOpenAddUser } = useAppSelector(ModalState);
+  const { loggedInUser } = useAppSelector(userState);
+
+  const filteredContacts: User[] = users.filter((curr: User) => {
+    return !loggedInUser?.contacts.find((one: User) => {
+      return curr._id === one._id;
+    });
   });
+
+  const data = filteredContacts.filter((user: User) =>
+    user.name.toLowerCase().includes(name.toLowerCase())
+  ) as User[];
+
   const dispatch = useAppDispatch();
-  let { users } = useAppSelector(DataState);
-  const { isOpen } = useAppSelector(ModalState);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { value } = e.target;
+    setName(value);
   };
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log("Gmail address submitted:", formData.email);
-  //   dispatch(handleOpen(false));
-  // };
-
-  users = users.filter((user) =>
-    user.name.toLowerCase().includes(formData.email.toLowerCase())
-  );
-
-  console.log(addedUsers);
+  const handleAddChatRequest = (recieverId: string) => {
+    socket.current?.emit("sendChatRequest", {
+      requestFrom: loggedInUser?._id,
+      requestTo: recieverId,
+    });
+  };
 
   return (
     <>
       <Modal
-        open={isOpen}
-        onClose={() => dispatch(handleOpen(false))}
+        open={isOpenAddUser}
+        onClose={() => dispatch(handleAddUserOpen(false))}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <div className="modal-content">
-          <div>
-            <h2>Add a User</h2>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Search User here"
-              required
-            />
-          </div>
+          <h2>Add a User</h2>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={handleInputChange}
+            placeholder="Search User here"
+          />
 
-          {addedUsers.length > 0 && (
-            <div>
-              <div className="label_list">Selected Users </div>
-              <ul className="add_user">
-                {addedUsers.map((currUser: User) => {
-                  return (
-                    <li
-                      key={currUser._id}
-                      onClick={() => {
-                        let temp = addedUsers;
-                        temp = temp.filter((user) => user._id !== currUser._id);
-                        setAddedUsers(temp);
-                      }}
-                    >
+          <div>All Users </div>
+          {data.length > 0 && (
+            <ul className="add_user">
+              {data?.map((currUser) => {
+                return (
+                  <li key={currUser._id}>
+                    <div>
                       <img
                         src={
                           typeof currUser.img === "string"
@@ -83,49 +78,25 @@ const ModalWrapper = ({ userType }: Props) => {
                         }
                         alt="user image"
                       />
-                      <h4>{currUser.name}</h4>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+                      <div className="user_name">
+                        <h4>{currUser.name}</h4>
+                      </div>
+                    </div>
+                    <div
+                      className="send_request"
+                      onClick={() => {
+                        console.log("sent to", currUser.name);
+                        handleAddChatRequest(currUser._id);
+                      }}
+                    >
+                      <MdPersonAdd />
+                      {/* <MdCancel /> */}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           )}
-
-          {addedUsers.length !== users.length && (
-            <div>
-              <div>All Users </div>
-              {users.length > 0 && (
-                <ul className="add_user">
-                  {users?.map((currUser: User) => {
-                    if (addedUsers.includes(currUser)) return;
-                    return (
-                      <li
-                        key={currUser._id}
-                        onClick={() => {
-                          setAddedUsers((prev) => [...prev, currUser]);
-                        }}
-                      >
-                        <img
-                          src={
-                            typeof currUser.img === "string"
-                              ? currUser.img
-                              : currUser.img.image_url
-                          }
-                          alt="user image"
-                        />
-                        <div className="user_name">
-                          <h4>{currUser.name}</h4>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-          )}
-          <div>
-            <button type="submit">Add User</button>
-          </div>
         </div>
       </Modal>
     </>

@@ -6,6 +6,8 @@ const sendMsgHost: string = "http://localhost:4000/api/message/addMsg";
 const getMsgsHost: string = "http://localhost:4000/api/message/getMsgs";
 const setUserAvtarHost: string = "http://localhost:4000/api/users";
 const getGroupsHost: string = "http://localhost:4000/api/groups";
+const addUserHost: string = "http://localhost:4000/api/users";
+const fecthUser: string = "http://localhost:4000/api/users";
 
 export {
   backendHost,
@@ -16,4 +18,6 @@ export {
   setUserAvtarHost,
   getMsgsHost,
   getGroupsHost,
+  addUserHost,
+  fecthUser,
 };

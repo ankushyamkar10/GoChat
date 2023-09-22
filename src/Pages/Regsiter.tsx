@@ -6,7 +6,7 @@ import { register, reset, userState } from "../features/Auth/AuthSlice";
 
 const Regsiter: React.FC = () => {
   const navigate = useNavigate();
-  const authState = useAppSelector(userState);
+  const { loggedInUser, isSuccess } = useAppSelector(userState);
   const dispatch = useAppDispatch();
   const [registerDetails, setRegisterDetails] = useState<RegisterData>({
     name: "",
@@ -17,9 +17,9 @@ const Regsiter: React.FC = () => {
   const { name, email, password, confirmPassword } = registerDetails;
 
   useEffect(() => {
-    if (authState.user || authState.isSuccess) navigate("/");
+    if (loggedInUser || isSuccess) navigate("/");
     dispatch(reset());
-  }, [authState.user, authState.isSuccess, dispatch, navigate]);
+  }, [loggedInUser, isSuccess, dispatch, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<Element>) => {
     e.preventDefault();
@@ -32,8 +32,8 @@ const Regsiter: React.FC = () => {
     ) {
       dispatch(register(registerDetails));
 
-      if (authState.isSuccess) {
-        if (!authState.user?.isAvtarSet) {
+      if (isSuccess) {
+        if (!loggedInUser?.isAvtarSet) {
           navigate("/setAvtar");
         } else {
           navigate("/chat");

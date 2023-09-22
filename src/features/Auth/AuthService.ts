@@ -1,13 +1,17 @@
 import axios from "axios";
-import { loginHost, registerHost } from "../../Utils/constants";
-import { LoginData, RegisterData } from "../../Types/types";
-import { destroySession, setSession } from "../../Utils/SessionStorage";
+import { addUserHost, loginHost, registerHost } from "../../Utils/constants";
+import { LoginData, RegisterData, addUser } from "../../Types/types";
+import {
+  destroyCookie,
+  getUserAuthorizationToken,
+  setCookie,
+} from "../../Utils/Cookies";
 
 const register = async (userData: RegisterData) => {
   try {
     const response = await axios.post(registerHost, userData);
 
-    setSession("user", JSON.stringify(response.data));
+    setCookie("user", response.data);
     return response.data;
   } catch (error) {
     return error;
@@ -17,8 +21,7 @@ const register = async (userData: RegisterData) => {
 const login = async (userData: LoginData) => {
   try {
     const response = await axios.post(loginHost, userData);
-
-    setSession("user", JSON.stringify(response.data));
+    setCookie("user", response.data);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -28,8 +31,28 @@ const login = async (userData: LoginData) => {
 };
 
 const logout = async () => {
-  destroySession("user");
+  destroyCookie("user");
 };
 
-const authService = { register, login, logout };
+const addContact = async ({ user_id, addedUser }: addUser) => {
+  try {
+    const response = await axios.patch(
+      addUserHost,
+      { user_id, addUser: addedUser },
+      {
+        headers: {
+          Authorization: getUserAuthorizationToken(),
+        },
+      }
+    );
+    setCookie("user", response.data);
+    return response.data.contacts;
+  } catch (error) {
+    console.log(error);
+
+    return error;
+  }
+};
+
+const authService = { register, login, logout, addContact };
 export default authService;

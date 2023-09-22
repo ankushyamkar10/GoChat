@@ -1,14 +1,11 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
+import { useAppSelector } from "../../hooks/useTypedSelector";
 import { MsgState } from "../../features/Message/MessageSlice";
 import UsersWapper from "../SingleChat/UsersWrapper";
 import GroupsWrapper from "../GroupChat/GroupsWrapper";
-import {
-  DataState,
-  fetchGroups,
-} from "../../features/FetchData/FetchDataSlice";
 import { userState } from "../../features/Auth/AuthSlice";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -17,13 +14,14 @@ type Props = {
 const Chatbox = (props: Props) => {
   const { socket } = props;
   const { selected } = useAppSelector(MsgState);
-  const { user } = useAppSelector(userState);
-  const { groups } = useAppSelector(DataState);
-  const dispatch = useAppDispatch();
+  const { loggedInUser } = useAppSelector(userState);
+  // const { groups } = useAppSelector(DataState);
+  const { fetchGroupsMore, groups } = useContext(FetchDataContext);
 
   useEffect(() => {
-    if (groups.length === 0 && user) dispatch(fetchGroups(user));
-    else {
+    if (groups.length === 0 && loggedInUser) {
+      fetchGroupsMore(loggedInUser?._id);
+    } else {
       groups.forEach((grp) => {
         socket.current?.emit("joinGroup", grp._id);
       });

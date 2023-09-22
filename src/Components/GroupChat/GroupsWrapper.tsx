@@ -1,19 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import { Group, Message } from "../../Types/types";
-import { MdPhone, MdVideoCall } from "react-icons/md";
-import { HiDotsVertical } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
 import { userState } from "../../features/Auth/AuthSlice";
 import {
   MsgState,
   fecthMessages,
-  sendMessage,
   setMessages,
 } from "../../features/Message/MessageSlice";
-import { DataState } from "../../features/FetchData/FetchDataSlice";
 import Messages from "../Messages/Messages";
 import MsgForm from "../MessageForm/MsgForm";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -22,8 +19,10 @@ type Props = {
 
 const GroupsWrapper = (props: Props) => {
   const { socket, selected } = props;
-  const { user } = useAppSelector(userState);
-  const { users } = useAppSelector(DataState);
+  const { loggedInUser } = useAppSelector(userState);
+  // const { users } = useAppSelector(DataState);
+  const { users } = useContext(FetchDataContext);
+
   const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
   const dispatch = useAppDispatch();
   const msgContainerRef = useRef<HTMLDivElement | null>(null);
@@ -46,14 +45,14 @@ const GroupsWrapper = (props: Props) => {
   }, [conversation]);
 
   useEffect(() => {
-    if (user && selected) {
+    if (loggedInUser && selected) {
       const msgArg = {
-        userId: user._id,
+        userId: loggedInUser._id,
         selectedId: selected._id,
       };
       dispatch(fecthMessages(msgArg));
     }
-  }, [user, selected, fecthMessages, dispatch]);
+  }, [loggedInUser, selected, fecthMessages, dispatch]);
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
@@ -101,13 +100,14 @@ const GroupsWrapper = (props: Props) => {
 
   useEffect(() => {
     if (upComingMsg) {
-      if (user?._id !== upComingMsg.sender) dispatch(setMessages(upComingMsg));
+      if (loggedInUser?._id !== upComingMsg.sender)
+        dispatch(setMessages(upComingMsg));
       setUpComingMsg(null);
     }
   }, [upComingMsg, setMessages, dispatch]);
 
-  const filteredMembers = users.filter((user) =>
-    selected.members.some((member) => member === user._id)
+  const filteredMembers = users.filter((loggedInUser) =>
+    selected.members.some((member) => member === loggedInUser._id)
   );
 
   return (

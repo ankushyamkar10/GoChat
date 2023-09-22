@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useAppSelector } from "../../hooks/useTypedSelector";
-import { userState } from "../../features/Auth/AuthSlice";
-import { setUserAvtarHost } from "../../Utils/constants";
+import { useAppSelector } from "../hooks/useTypedSelector";
+import { userState } from "../features/Auth/AuthSlice";
+import { setUserAvtarHost } from "../Utils/constants";
 import axios from "axios";
-import { setSession } from "../../Utils/SessionStorage";
+import { setCookie } from "../Utils/Cookies";
 
 const setUserAvtar = async (
   selected: string | undefined,
@@ -37,14 +37,16 @@ function convertToBase64(file: File | undefined) {
 
 const CloudImage = () => {
   const [image, setImage] = useState<string>("");
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target) {
       let newFile: File | undefined = e.target.files?.[0];
       var blob = newFile?.slice(0, newFile?.size, "image/png");
       if (blob) {
-        newFile = new File([blob], `${user?.name}.png`, { type: "image/png" });
+        newFile = new File([blob], `${loggedInUser?.name}.png`, {
+          type: "image/png",
+        });
         const base64 = await convertToBase64(newFile);
         base64?.toString();
         if (typeof base64 === "string") setImage(base64);
@@ -55,9 +57,9 @@ const CloudImage = () => {
   const handleSubmit = (e?: React.FormEvent<Element>) => {
     e?.preventDefault();
     if (image !== null) {
-      setUserAvtar(image, user?._id, "user")
+      setUserAvtar(image, loggedInUser?._id, "user")
         .then((res) => {
-          setSession("user", JSON.stringify(res));
+          setCookie("user", JSON.stringify(res));
           window.location.href = "/";
         })
         .catch((e) => console.log(e));

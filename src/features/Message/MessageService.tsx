@@ -1,17 +1,8 @@
 import axios from "axios";
 import { getMsgsHost, sendMsgHost } from "../../Utils/constants";
+import { fetchMessagesgProps, sendMessageProps } from "../../Types/types";
 
-type fetchMsgProps = {
-  userId: string;
-  selectedId: string;
-};
-
-type sendMsgProps = {
-  message: { text: string; time_stamp: string };
-  sender: string | undefined;
-  reciever: string | undefined;
-};
-const fetchMsgs = async ({ userId, selectedId }: fetchMsgProps) => {
+const fetchMsgs = async ({ userId, selectedId }: fetchMessagesgProps) => {
   try {
     const response = await axios.post(getMsgsHost, {
       from: userId,
@@ -23,12 +14,12 @@ const fetchMsgs = async ({ userId, selectedId }: fetchMsgProps) => {
   }
 };
 
-const sendMsg = async ({ message, sender, reciever }: sendMsgProps) => {
+const sendMsg = async ({ message, senderId, recieverId }: sendMessageProps) => {
   try {
     const response = await axios.post(sendMsgHost, {
       message,
-      sender,
-      reciever,
+      senderId,
+      recieverId,
     });
     // console.log(response.data);
 

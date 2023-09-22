@@ -21,7 +21,7 @@ type Props = {
 
 const UsersWapper = (props: Props) => {
   const { socket, selected } = props;
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
   const msgContainerRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
@@ -38,14 +38,14 @@ const UsersWapper = (props: Props) => {
   }, [conversation]);
 
   useEffect(() => {
-    if (user && selected) {
+    if (loggedInUser && selected) {
       const msgArg = {
-        userId: user._id,
+        userId: loggedInUser._id,
         selectedId: selected._id,
       };
       dispatch(fecthMessages(msgArg));
     }
-  }, [user, selected, fecthMessages, dispatch]);
+  }, [loggedInUser, selected, fecthMessages, dispatch]);
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();

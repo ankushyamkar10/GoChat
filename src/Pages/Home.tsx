@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
 import Chatbox from "../Components/Layout/Chatbox";
 import { Socket, io } from "socket.io-client";
 import { backendHost } from "../Utils/constants";
@@ -9,22 +9,39 @@ import { useAppSelector } from "../hooks/useTypedSelector";
 import { userState } from "../features/Auth/AuthSlice";
 import ModalWrapper from "../Components/Config/ModalWrapper";
 import { ModalState } from "../features/Modal/ModalSlice";
+import FetchDataContext from "../features/FetchData/FetchDataContext";
 
 const Chat = () => {
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const socket: React.MutableRefObject<Socket | undefined> = useRef<Socket>();
-  const { isOpen } = useAppSelector(ModalState);
+  const { isOpenAddUser } = useAppSelector(ModalState);
+
+  const { fetchUsersMore, fetchGroupsMore } = useContext(FetchDataContext);
 
   useEffect(() => {
     socket.current = io(backendHost);
-    socket.current.emit("addUser", user?._id);
+    socket.current.emit("addUser", loggedInUser?._id);
+    if (loggedInUser) {
+      fetchUsersMore(loggedInUser._id);
+      fetchGroupsMore(loggedInUser._id);
+    }
   }, []);
 
-  if (user) {
+  useEffect(() => {
+    socket.current?.on("requestAccepted", (data) => {
+      console.log(data);
+    });
+
+    socket.current?.on("requestRejected", (data) => {
+      console.log(data);
+    });
+  });
+
+  if (loggedInUser) {
     return (
       <div>
         {/* <Navbar /> */}
-        {isOpen && <ModalWrapper userType="users" />}
+        {isOpenAddUser && <ModalWrapper socket={socket} />}
         <div className="chats-screen">
           <div className="contacts">
             <UserMe />

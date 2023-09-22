@@ -12,14 +12,14 @@ type Props = {
 
 function MsgForm({ socket, selected }: Props) {
   const msgRef = useRef<HTMLInputElement>(null);
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
-      user &&
+      loggedInUser &&
       selected &&
       msgRef.current?.value &&
       msgRef.current?.value.length > 0
@@ -34,7 +34,7 @@ function MsgForm({ socket, selected }: Props) {
           text: msgRef.current.value.trim(),
           time_stamp: time_stamp,
         },
-        sender: user._id,
+        sender: loggedInUser._id,
         recieverId: selected._id,
       });
 
@@ -43,8 +43,8 @@ function MsgForm({ socket, selected }: Props) {
           text: msgRef.current.value,
           time_stamp: time_stamp,
         },
-        sender: user._id,
-        reciever: selected._id,
+        senderId: loggedInUser._id,
+        recieverId: selected._id,
       };
 
       dispatch(sendMessage(msgArg));

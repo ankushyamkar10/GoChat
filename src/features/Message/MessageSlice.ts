@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { Group, Message, User } from "../../Types/types";
+import {
+  Group,
+  Message,
+  User,
+  fetchMessagesgProps,
+  sendMessageProps,
+} from "../../Types/types";
 import messageService from "./MessageService";
 
 // const user = await JSON.parse(localStorage.getItem("user") as string);
@@ -11,7 +17,7 @@ type messageInitial = {
   isError: Boolean;
   isSuccess: Boolean;
   isLoading: Boolean;
-  errMsg: string;
+  errorMessage: string;
   conversation: Message[];
 };
 
@@ -20,22 +26,11 @@ const initialState: messageInitial = {
   isError: false,
   isSuccess: false,
   isLoading: false,
-  errMsg: "",
+  errorMessage: "",
   conversation: [],
 };
 
-type fetchMsgProps = {
-  userId: string;
-  selectedId: string;
-};
-
-type sendMsgProps = {
-  message: { text: string; time_stamp: string };
-  sender: string;
-  reciever: string;
-};
-
-export const fecthMessages = createAsyncThunk<Message[], fetchMsgProps>(
+export const fecthMessages = createAsyncThunk<Message[], fetchMessagesgProps>(
   "msg/fetchMessages",
   async (fecthMegData, thunkAPI) => {
     try {
@@ -49,7 +44,7 @@ export const fecthMessages = createAsyncThunk<Message[], fetchMsgProps>(
   }
 );
 
-export const sendMessage = createAsyncThunk<Message, sendMsgProps>(
+export const sendMessage = createAsyncThunk<Message, sendMessageProps>(
   "msg/sendMessages",
   async (sendMessageData, thunkAPI) => {
     try {
@@ -88,7 +83,7 @@ export const MessageSlice = createSlice({
       .addCase(fecthMessages.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
-        state.errMsg = action.payload as string;
+        state.errorMessage = action.payload as string;
       })
       .addCase(sendMessage.pending, (state) => {
         state.isLoading = true;
@@ -101,7 +96,7 @@ export const MessageSlice = createSlice({
       .addCase(sendMessage.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
-        state.errMsg = action.payload as string;
+        state.errorMessage = action.payload as string;
       });
   },
 });

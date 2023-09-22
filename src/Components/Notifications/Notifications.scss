@@ -1,0 +1,40 @@
+.notification_list {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch !important;
+
+  .notification {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(134, 150, 160, 0.5);
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    img {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 100%;
+    }
+
+    .action {
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 100%;
+        cursor: pointer;
+        &:hover {
+          background: white;
+          color: black;
+        }
+      }
+    }
+  }
+}

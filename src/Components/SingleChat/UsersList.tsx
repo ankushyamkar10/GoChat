@@ -2,29 +2,31 @@ import { useEffect, useState } from "react";
 import { MdMessage } from "react-icons/md";
 import { User } from "../../Types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
-import { DataState, fetchUsers } from "../../features/FetchData/FetchDataSlice";
 import { setSelected } from "../../features/Message/MessageSlice";
 import { userState } from "../../features/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { handleOpen } from "../../features/Modal/ModalSlice";
+import { handleAddUserOpen } from "../../features/Modal/ModalSlice";
+import { Socket } from "socket.io-client";
 
-const UsersList = () => {
+type Props = {
+  socket: React.MutableRefObject<Socket | undefined>;
+};
+
+const UsersList = ({ socket }: Props) => {
   const [search, setSearch] = useState("");
-  let { users } = useAppSelector(DataState);
-  const { user } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!user) navigate("/login");
-    else dispatch(fetchUsers(user));
+    if (!loggedInUser) navigate("/login");
   }, []);
 
   const handleClick = (user: User) => {
     dispatch(setSelected(user));
   };
 
-  users = users.filter((user: User) =>
+  const data = loggedInUser?.contacts.filter((user: User) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -42,7 +44,7 @@ const UsersList = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {users?.map((currUser: User) => {
+        {data?.map((currUser: User) => {
           return (
             <li key={currUser._id} onClick={() => handleClick(currUser)}>
               <img
@@ -61,7 +63,7 @@ const UsersList = () => {
       <div
         className="add_msg"
         onClick={() => {
-          dispatch(handleOpen(true));
+          dispatch(handleAddUserOpen(true));
         }}
       >
         <MdMessage size={15} />

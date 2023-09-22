@@ -1,10 +1,10 @@
 import { MdGroupAdd } from "react-icons/md";
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
-import { DataState } from "../../features/FetchData/FetchDataSlice";
+import { useContext, useState } from "react";
+import { useAppDispatch } from "../../hooks/useTypedSelector";
 import { Group } from "../../Types/types";
 import { setSelected } from "../../features/Message/MessageSlice";
 import { Socket } from "socket.io-client";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -12,7 +12,9 @@ type Props = {
 
 const GroupsList = (props: Props) => {
   const [search, setSearch] = useState("");
-  const { groups } = useAppSelector(DataState);
+  // const { groups } = useAppSelector(DataState);
+  const { groups } = useContext(FetchDataContext);
+
   const dispatch = useAppDispatch();
 
   const handleClick = (group: Group) => {

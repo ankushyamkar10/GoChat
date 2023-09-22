@@ -10,6 +10,16 @@ export interface User {
   isAvtarSet: Boolean;
   img: string | userProfile;
   email: string;
+  contacts: User[];
+}
+
+export interface Users {
+  name: string;
+  token: string;
+  isAvtarSet: Boolean;
+  img: string | userProfile;
+  email: string;
+  contacts: User[];
 }
 
 export interface Group {
@@ -20,6 +30,20 @@ export interface Group {
   img: string;
   admin: Array<string>;
   members: Array<string>;
+  createdAt: Date;
+}
+
+export interface Entity {
+  _id: string;
+  name: string;
+  isAvtarSet: Boolean;
+  img: string | userProfile;
+  token?: string;
+  email?: string;
+  contacts?: Array<Entity>;
+  desc?: string;
+  admin?: Array<string>;
+  members?: Array<string>;
   createdAt: Date;
 }
 
@@ -41,3 +65,28 @@ export interface Message {
   sender: string;
   isSenderMe: Boolean;
 }
+
+export interface addUser {
+  user_id: string;
+  addedUser: User[] | Group[];
+}
+
+export interface fetchMessagesgProps {
+  userId: string;
+  selectedId: string;
+}
+
+export interface sendMessageProps {
+  message: { text: string; time_stamp: string };
+  senderId: string | undefined;
+  recieverId: string | undefined;
+}
+
+export type Data = {
+  users: User[];
+  groups: Group[];
+  mappedUsers: Map<string, User>;
+  errMsg: string;
+  fetchUsersMore: (userId: string) => Promise<void>;
+  fetchGroupsMore: (userId: string) => Promise<void>;
+};
