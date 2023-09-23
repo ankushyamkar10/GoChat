@@ -11,6 +11,7 @@ export interface User {
   img: string | userProfile;
   email: string;
   contacts: User[];
+  sentRequests: Array<string>;
 }
 
 export interface Users {
@@ -90,3 +91,8 @@ export type Data = {
   fetchUsersMore: (userId: string) => Promise<void>;
   fetchGroupsMore: (userId: string) => Promise<void>;
 };
+
+export interface communication {
+  senderId: string;
+  recieverId: string;
+}

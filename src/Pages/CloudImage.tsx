@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../hooks/useTypedSelector";
 import { userState } from "../features/Auth/AuthSlice";
-import { setUserAvtarHost } from "../Utils/constants";
+import { setUserAvtarRoute } from "../Utils/constants";
 import axios from "axios";
 import { setCookie } from "../Utils/Cookies";
 
@@ -11,7 +11,7 @@ const setUserAvtar = async (
   decider: string
 ) => {
   if (decider === "user") {
-    const res = await axios.patch(setUserAvtarHost + "/" + userId, {
+    const res = await axios.patch(setUserAvtarRoute + "/" + userId, {
       imageUrl: selected,
     });
 

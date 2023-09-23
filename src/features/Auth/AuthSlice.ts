@@ -5,6 +5,7 @@ import {
   RegisterData,
   User,
   addUser,
+  communication,
 } from "../../Types/types";
 import authService from "./AuthService";
 import { RootState } from "../../app/store";
@@ -72,6 +73,20 @@ export const adduser = createAsyncThunk<User[] | Group[], addUser>(
   }
 );
 
+export const sendChatRequest = createAsyncThunk<User, communication>(
+  "auth/sendChatRequest",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.sendChatRequest(data);
+    } catch (e) {
+      if (e instanceof Error) {
+        const msg = e.message ? e.message : e.name && e.name;
+        return thunkAPI.rejectWithValue(msg);
+      }
+    }
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
@@ -132,6 +147,20 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload as string;
         state.loggedInUser = null;
+      })
+      .addCase(sendChatRequest.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(sendChatRequest.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        if (state.loggedInUser)
+          state.loggedInUser.sentRequests = action.payload.sentRequests;
+      })
+      .addCase(sendChatRequest.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
       })
       .addCase(logout.fulfilled, (state) => {
         state.loggedInUser = null;

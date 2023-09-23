@@ -1,10 +1,10 @@
 import axios from "axios";
-import { allUsersHost, getGroupsHost } from "../../Utils/constants";
+import { allUsersRoute, getGroupsRoute } from "../../Utils/constants";
 import { getUserAuthorizationToken } from "../../Utils/Cookies";
 
 const fetchUsers = async (user_id: string) => {
   try {
-    const response = await axios.get(allUsersHost + "/" + user_id);
+    const response = await axios.get(allUsersRoute + "/" + user_id);
 
     return response.data;
   } catch (error) {
@@ -14,7 +14,7 @@ const fetchUsers = async (user_id: string) => {
 
 const fetchGroups = async (user_id: string) => {
   try {
-    const response = await axios.get(getGroupsHost + "/" + user_id);
+    const response = await axios.get(getGroupsRoute + "/" + user_id);
     return response.data;
   } catch (error) {
     return null;
@@ -23,7 +23,7 @@ const fetchGroups = async (user_id: string) => {
 
 const fecthUser = async (user_id: string) => {
   try {
-    const response = await axios.get(getGroupsHost + "/" + user_id, {
+    const response = await axios.get(getGroupsRoute + "/" + user_id, {
       headers: {
         Authorization: getUserAuthorizationToken(),
       },

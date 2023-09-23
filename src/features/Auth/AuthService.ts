@@ -1,6 +1,11 @@
 import axios from "axios";
-import { addUserHost, loginHost, registerHost } from "../../Utils/constants";
-import { LoginData, RegisterData, addUser } from "../../Types/types";
+import { userRoute } from "../../Utils/constants";
+import {
+  LoginData,
+  RegisterData,
+  addUser,
+  communication,
+} from "../../Types/types";
 import {
   destroyCookie,
   getUserAuthorizationToken,
@@ -9,7 +14,7 @@ import {
 
 const register = async (userData: RegisterData) => {
   try {
-    const response = await axios.post(registerHost, userData);
+    const response = await axios.post(userRoute + "/register", userData);
 
     setCookie("user", response.data);
     return response.data;
@@ -20,7 +25,7 @@ const register = async (userData: RegisterData) => {
 
 const login = async (userData: LoginData) => {
   try {
-    const response = await axios.post(loginHost, userData);
+    const response = await axios.post(userRoute + "/login", userData);
     setCookie("user", response.data);
     return response.data;
   } catch (error) {
@@ -37,7 +42,7 @@ const logout = async () => {
 const addContact = async ({ user_id, addedUser }: addUser) => {
   try {
     const response = await axios.patch(
-      addUserHost,
+      userRoute,
       { user_id, addUser: addedUser },
       {
         headers: {
@@ -54,5 +59,26 @@ const addContact = async ({ user_id, addedUser }: addUser) => {
   }
 };
 
-const authService = { register, login, logout, addContact };
+const sendChatRequest = async (data: communication) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:4000/api/users/sendChatRequest",
+      { data }
+      // {
+      //   headers: {
+      //     Authorization: getUserAuthorizationToken(),
+      //   },
+      // }
+    );
+    console.log(response);
+
+    setCookie("user", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const authService = { register, login, logout, addContact, sendChatRequest };
 export default authService;

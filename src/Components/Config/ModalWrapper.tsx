@@ -1,11 +1,11 @@
 import { Modal } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks/useTypedSelector";
-import { User } from "../../Types/types";
+import { User, Users, communication } from "../../Types/types";
 import { ModalState, handleAddUserOpen } from "../../features/Modal/ModalSlice";
 import "./Config.scss";
-import { userState } from "../../features/Auth/AuthSlice";
-import { MdPersonAdd } from "react-icons/md";
+import { sendChatRequest, userState } from "../../features/Auth/AuthSlice";
+import { MdCancel, MdPersonAdd } from "react-icons/md";
 import { Socket } from "socket.io-client";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
@@ -18,13 +18,16 @@ const ModalWrapper = ({ socket }: Props) => {
   // const { users } = useAppSelector(DataState);
   const { users } = useContext(FetchDataContext);
   const { isOpenAddUser } = useAppSelector(ModalState);
-  const { loggedInUser } = useAppSelector(userState);
-
-  const filteredContacts: User[] = users.filter((curr: User) => {
-    return !loggedInUser?.contacts.find((one: User) => {
-      return curr._id === one._id;
+  const { loggedInUser, isSuccess } = useAppSelector(userState);
+  const sentRequests = loggedInUser?.sentRequests;
+  let filteredContacts: User[] = [];
+  if (loggedInUser)
+    filteredContacts = users.filter((curr: User) => {
+      return !loggedInUser?.contacts.find((one: User) => {
+        return curr._id === one._id;
+      });
     });
-  });
+  console.log(loggedInUser);
 
   const data = filteredContacts.filter((user: User) =>
     user.name.toLowerCase().includes(name.toLowerCase())
@@ -42,6 +45,13 @@ const ModalWrapper = ({ socket }: Props) => {
       requestFrom: loggedInUser?._id,
       requestTo: recieverId,
     });
+    if (loggedInUser) {
+      const parameters: communication = {
+        recieverId,
+        senderId: loggedInUser._id,
+      };
+      dispatch(sendChatRequest(parameters));
+    }
   };
 
   return (
@@ -89,8 +99,11 @@ const ModalWrapper = ({ socket }: Props) => {
                         handleAddChatRequest(currUser._id);
                       }}
                     >
-                      <MdPersonAdd />
-                      {/* <MdCancel /> */}
+                      {sentRequests && sentRequests.includes(currUser._id) ? (
+                        <MdCancel />
+                      ) : (
+                        <MdPersonAdd />
+                      )}
                     </div>
                   </li>
                 );

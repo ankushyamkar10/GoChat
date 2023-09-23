@@ -4,7 +4,7 @@ import FetchDataContext from "../../features/FetchData/FetchDataContext";
 import "./Notifications.scss";
 import { MdOutlineCancel } from "react-icons/md";
 import { TiTickOutline } from "react-icons/ti";
-import { useAppSelector } from "../../hooks/useTypedSelector";
+import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
 import { userState } from "../../features/Auth/AuthSlice";
 import { User } from "../../Types/types";
 
@@ -13,15 +13,12 @@ type Props = {
 };
 
 const Notifications = ({ socket }: Props) => {
-  const [requests, setRequests] = useState<Array<string>>([]);
+  // const [requests, setRequests] = useState<Array<string>>([]);
+  const { chatRequests } = useAppSelector(userState);
   const { mappedUsers } = useContext(FetchDataContext);
   const { loggedInUser } = useAppSelector(userState);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    socket.current?.on("sendChatRequest", (data) => {
-      setRequests((prev) => [...prev, data.requestFrom]);
-    });
-  });
   useEffect(() => {
     socket.current?.on("requestAccepted", (data) => {
       console.log(data);
@@ -36,6 +33,7 @@ const Notifications = ({ socket }: Props) => {
       acceptorId: loggedInUser?._id,
       senderId: user._id,
     });
+    // setTimeout(() => dispatch(removeRequest(user._id)), 2000);
   };
 
   const handleReject = (user: User) => {
@@ -43,9 +41,11 @@ const Notifications = ({ socket }: Props) => {
       rejectorId: loggedInUser?._id,
       senderId: user._id,
     });
+
+    // setTimeout(() => dispatch(removeRequest(user._id)), 2000);
   };
 
-  const abc = requests.map((request) => {
+  const abc = chatRequests.map((request) => {
     const user = mappedUsers.get(request);
     return (
       <div className="notification" key={request}>

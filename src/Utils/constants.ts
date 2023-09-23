@@ -1,23 +1,25 @@
-const backendHost: string = "http://localhost:4000";
-const loginHost: string = "http://localhost:4000/api/users/login";
-const registerHost: string = "http://localhost:4000/api/users/register";
-const allUsersHost: string = "http://localhost:4000/api/users/all";
-const sendMsgHost: string = "http://localhost:4000/api/message/addMsg";
-const getMsgsHost: string = "http://localhost:4000/api/message/getMsgs";
-const setUserAvtarHost: string = "http://localhost:4000/api/users";
-const getGroupsHost: string = "http://localhost:4000/api/groups";
-const addUserHost: string = "http://localhost:4000/api/users";
+const backendRoute: string = "http://localhost:4000";
+const allUsersRoute: string = "http://localhost:4000/api/users/all";
+const sendMsgRoute: string = "http://localhost:4000/api/message/addMsg";
+const getMsgsRoute: string = "http://localhost:4000/api/message/getMsgs";
+const setUserAvtarRoute: string = "http://localhost:4000/api/users";
+const getGroupsRoute: string = "http://localhost:4000/api/groups";
 const fecthUser: string = "http://localhost:4000/api/users";
+const sendChatRequestRoute: string = "http://localhost:4000/api/users";
+
+const userRoute: string = "http://localhost:4000/api/users";
+const groupRoute: string = "http://localhost:4000/api/groups";
+const messageRoute: string = "http://localhost:4000/api/message";
 
 export {
-  backendHost,
-  loginHost,
-  registerHost,
-  allUsersHost,
-  sendMsgHost,
-  setUserAvtarHost,
-  getMsgsHost,
-  getGroupsHost,
-  addUserHost,
+  backendRoute,
+  userRoute,
+  groupRoute,
+  messageRoute,
+  allUsersRoute,
+  sendMsgRoute,
+  setUserAvtarRoute,
+  getMsgsRoute,
+  getGroupsRoute,
   fecthUser,
 };
