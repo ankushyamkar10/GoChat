@@ -6,7 +6,12 @@ import "../scss/Chat.scss";
 import Contacts from "../Components/Layout/Contacts";
 import UserMe from "../Components/Layout/UserMe";
 import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
-import { sendChatRequest, userState } from "../features/Auth/AuthSlice";
+import {
+  recieveChatRequest,
+  sendChatRequest,
+  updateRequestAndContacts,
+  userState,
+} from "../features/Auth/AuthSlice";
 import ModalWrapper from "../Components/Config/ModalWrapper";
 import { ModalState } from "../features/Modal/ModalSlice";
 import FetchDataContext from "../features/FetchData/FetchDataContext";
@@ -22,8 +27,9 @@ const Chat = () => {
 
   useEffect(() => {
     socket.current = io(backendRoute);
-    socket.current.emit("addUser", loggedInUser?._id);
+
     if (loggedInUser) {
+      socket.current.emit("addUser", loggedInUser._id);
       fetchUsersMore(loggedInUser._id);
       fetchGroupsMore(loggedInUser._id);
     }
@@ -33,17 +39,36 @@ const Chat = () => {
     socket.current?.on(
       "requestAccepted",
       (data: { senderId: string; acceptorId: string }) => {
-        alert(mappedUsers.get(data.senderId));
+        dispatch(
+          updateRequestAndContacts({
+            actionId: data.acceptorId,
+            action: "accepted",
+          })
+        );
       }
     );
 
-    socket.current?.on("requestRejected", (data) => {
-      alert(data);
-    });
+    socket.current?.on(
+      "requestRejected",
+      (data: { senderId: string; rejectorId: string }) => {
+        dispatch(
+          updateRequestAndContacts({
+            actionId: data.rejectorId,
+            action: "rejected",
+          })
+        );
+      }
+    );
 
-    socket.current?.on("sendChatRequest", (data) => {
-      // dispatch(sendChatRequest(data.requestFrom));
-      console.log(data);
+    socket.current?.on("recieveChatRequest", (data) => {
+      console.log(data.requestFrom);
+
+      dispatch(
+        recieveChatRequest({
+          senderId: data.requestFrom,
+          recieverId: data.requestTo,
+        })
+      );
     });
   }, [socket]);
 

@@ -6,6 +6,7 @@ import {
   User,
   addUser,
   communication,
+  requestAction,
 } from "../../Types/types";
 import authService from "./AuthService";
 import { RootState } from "../../app/store";
@@ -86,6 +87,32 @@ export const sendChatRequest = createAsyncThunk<User, communication>(
     }
   }
 );
+export const recieveChatRequest = createAsyncThunk<User, communication>(
+  "auth/recieveChatRequest",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.recieveChatRequest(data);
+    } catch (e) {
+      if (e instanceof Error) {
+        const msg = e.message ? e.message : e.name && e.name;
+        return thunkAPI.rejectWithValue(msg);
+      }
+    }
+  }
+);
+export const updateRequestAndContacts = createAsyncThunk<User, requestAction>(
+  "auth/updateRequestAndContacts",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.updateRequestAndContacts(data);
+    } catch (e) {
+      if (e instanceof Error) {
+        const msg = e.message ? e.message : e.name && e.name;
+        return thunkAPI.rejectWithValue(msg);
+      }
+    }
+  }
+);
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
@@ -133,21 +160,6 @@ export const authSlice = createSlice({
         state.message = action.payload as string;
         state.loggedInUser = null;
       })
-      .addCase(adduser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(adduser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        if (state.loggedInUser)
-          state.loggedInUser.contacts = action.payload as User[];
-      })
-      .addCase(adduser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload as string;
-        state.loggedInUser = null;
-      })
       .addCase(sendChatRequest.pending, (state) => {
         state.isLoading = true;
       })
@@ -158,6 +170,37 @@ export const authSlice = createSlice({
           state.loggedInUser.sentRequests = action.payload.sentRequests;
       })
       .addCase(sendChatRequest.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+      .addCase(recieveChatRequest.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(recieveChatRequest.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        if (state.loggedInUser)
+          state.loggedInUser.recievedRequests = action.payload.recievedRequests;
+      })
+      .addCase(recieveChatRequest.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+      .addCase(updateRequestAndContacts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateRequestAndContacts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        if (state.loggedInUser) {
+          state.loggedInUser.contacts = action.payload.contacts;
+          state.loggedInUser.sentRequests = action.payload.sentRequests;
+          state.loggedInUser.recievedRequests = action.payload.recievedRequests;
+        }
+      })
+      .addCase(updateRequestAndContacts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

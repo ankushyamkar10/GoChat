@@ -10,8 +10,9 @@ export interface User {
   isAvtarSet: Boolean;
   img: string | userProfile;
   email: string;
-  contacts: User[];
+  contacts: string[];
   sentRequests: Array<string>;
+  recievedRequests: Array<string>;
 }
 
 export interface Users {
@@ -95,4 +96,9 @@ export type Data = {
 export interface communication {
   senderId: string;
   recieverId: string;
+}
+
+export interface requestAction {
+  actionId: string;
+  action: string;
 }

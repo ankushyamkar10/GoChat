@@ -4,7 +4,16 @@
   justify-content: center;
   align-items: stretch !important;
 
-  .notification {
+  .sent-requests {
+    display: flex;
+    flex-direction: column;
+    div {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid rgba(134, 150, 160, 0.5);
+    }
+  }
+
+  .recieved-requests {
     display: flex;
     align-items: center;
     justify-content: space-between;

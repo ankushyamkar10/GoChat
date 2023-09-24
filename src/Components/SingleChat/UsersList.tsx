@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdMessage } from "react-icons/md";
 import { User } from "../../Types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
@@ -7,6 +7,7 @@ import { userState } from "../../features/Auth/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { handleAddUserOpen } from "../../features/Modal/ModalSlice";
 import { Socket } from "socket.io-client";
+import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -15,6 +16,7 @@ type Props = {
 const UsersList = ({ socket }: Props) => {
   const [search, setSearch] = useState("");
   const { loggedInUser } = useAppSelector(userState);
+  const { mappedUsers } = useContext(FetchDataContext);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -26,9 +28,14 @@ const UsersList = ({ socket }: Props) => {
     dispatch(setSelected(user));
   };
 
-  const data = loggedInUser?.contacts.filter((user: User) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const data =
+    loggedInUser &&
+    loggedInUser.contacts.filter((user: string) => {
+      const mappedUser = mappedUsers.get(user);
+      if (mappedUser)
+        return mappedUser.name.toLowerCase().includes(search.toLowerCase());
+      return false;
+    });
 
   return (
     <>
@@ -44,20 +51,22 @@ const UsersList = ({ socket }: Props) => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {data?.map((currUser: User) => {
-          return (
-            <li key={currUser._id} onClick={() => handleClick(currUser)}>
-              <img
-                src={
-                  typeof currUser.img === "string"
-                    ? currUser.img
-                    : currUser.img.image_url
-                }
-                alt="user image"
-              />
-              <h4>{currUser.name}</h4>
-            </li>
-          );
+        {data?.map((user: string) => {
+          const currUser = mappedUsers.get(user);
+          if (currUser)
+            return (
+              <li key={currUser._id} onClick={() => handleClick(currUser)}>
+                <img
+                  src={
+                    typeof currUser.img === "string"
+                      ? currUser.img
+                      : currUser.img.image_url
+                  }
+                  alt="user image"
+                />
+                <h4>{currUser.name}</h4>
+              </li>
+            );
         })}
       </ul>
       <div

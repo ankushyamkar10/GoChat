@@ -5,6 +5,7 @@ import {
   RegisterData,
   addUser,
   communication,
+  requestAction,
 } from "../../Types/types";
 import {
   destroyCookie,
@@ -62,13 +63,32 @@ const addContact = async ({ user_id, addedUser }: addUser) => {
 const sendChatRequest = async (data: communication) => {
   try {
     const response = await axios.post(
-      "http://localhost:4000/api/users/sendChatRequest",
-      { data }
-      // {
-      //   headers: {
-      //     Authorization: getUserAuthorizationToken(),
-      //   },
-      // }
+      userRoute + "/sendChatRequest",
+      { data },
+      {
+        headers: {
+          Authorization: getUserAuthorizationToken(),
+        },
+      }
+    );
+
+    setCookie("user", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+const recieveChatRequest = async (data: communication) => {
+  try {
+    const response = await axios.post(
+      userRoute + "/recieveChatRequest",
+      { data },
+      {
+        headers: {
+          Authorization: getUserAuthorizationToken(),
+        },
+      }
     );
     console.log(response);
 
@@ -80,5 +100,37 @@ const sendChatRequest = async (data: communication) => {
   }
 };
 
-const authService = { register, login, logout, addContact, sendChatRequest };
+const updateRequestAndContacts = async ({
+  actionId,
+  action,
+}: requestAction) => {
+  try {
+    const response = await axios.post(
+      userRoute + "/requestAction",
+      { actionId, action },
+      {
+        headers: {
+          Authorization: getUserAuthorizationToken(),
+        },
+      }
+    );
+    console.log(response);
+
+    setCookie("user", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const authService = {
+  register,
+  login,
+  logout,
+  addContact,
+  sendChatRequest,
+  recieveChatRequest,
+  updateRequestAndContacts,
+};
 export default authService;
