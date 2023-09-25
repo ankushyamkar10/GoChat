@@ -4,7 +4,11 @@ import { useAppSelector, useAppDispatch } from "../../hooks/useTypedSelector";
 import { User, Users, communication } from "../../Types/types";
 import { ModalState, handleAddUserOpen } from "../../features/Modal/ModalSlice";
 import "./Config.scss";
-import { sendChatRequest, userState } from "../../features/Auth/AuthSlice";
+import {
+  cancelChatRequest,
+  sendChatRequest,
+  userState,
+} from "../../features/Auth/AuthSlice";
 import { MdCancel, MdPersonAdd } from "react-icons/md";
 import { Socket } from "socket.io-client";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
@@ -18,16 +22,15 @@ const ModalWrapper = ({ socket }: Props) => {
   // const { users } = useAppSelector(DataState);
   const { users } = useContext(FetchDataContext);
   const { isOpenAddUser } = useAppSelector(ModalState);
-  const { loggedInUser, isSuccess } = useAppSelector(userState);
+  const { loggedInUser } = useAppSelector(userState);
   const sentRequests = loggedInUser?.sentRequests;
   let filteredContacts: User[] = [];
   if (loggedInUser)
     filteredContacts = users.filter((curr: User) => {
-      return !loggedInUser?.contacts.find((one: User) => {
-        return curr._id === one._id;
+      return !loggedInUser.contacts.find((one: string) => {
+        return curr._id === one;
       });
     });
-  console.log(loggedInUser);
 
   const data = filteredContacts.filter((user: User) =>
     user.name.toLowerCase().includes(name.toLowerCase())
@@ -51,6 +54,22 @@ const ModalWrapper = ({ socket }: Props) => {
         senderId: loggedInUser._id,
       };
       dispatch(sendChatRequest(parameters));
+    }
+  };
+
+  const handleRCancelChatRequest = (recieverId: string) => {
+    if (loggedInUser && socket.current) {
+      socket.current?.emit("cancelChatRequest", {
+        requestFrom: loggedInUser._id,
+        requestTo: recieverId,
+      });
+      dispatch(
+        cancelChatRequest({
+          senderId: loggedInUser._id,
+          recieverId,
+          action: "sender",
+        })
+      );
     }
   };
 
@@ -92,17 +111,25 @@ const ModalWrapper = ({ socket }: Props) => {
                         <h4>{currUser.name}</h4>
                       </div>
                     </div>
-                    <div
-                      className="send_request"
-                      onClick={() => {
-                        console.log("sent to", currUser.name);
-                        handleAddChatRequest(currUser._id);
-                      }}
-                    >
+                    <div className="send_request">
                       {sentRequests && sentRequests.includes(currUser._id) ? (
-                        <MdCancel />
+                        <div
+                          onClick={() => {
+                            console.log("canceled to", currUser.name);
+                            handleRCancelChatRequest(currUser._id);
+                          }}
+                        >
+                          <MdCancel />
+                        </div>
                       ) : (
-                        <MdPersonAdd />
+                        <div
+                          onClick={() => {
+                            console.log("sent to", currUser.name);
+                            handleAddChatRequest(currUser._id);
+                          }}
+                        >
+                          <MdPersonAdd />
+                        </div>
                       )}
                     </div>
                   </li>

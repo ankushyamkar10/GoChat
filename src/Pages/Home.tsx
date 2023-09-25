@@ -7,6 +7,7 @@ import Contacts from "../Components/Layout/Contacts";
 import UserMe from "../Components/Layout/UserMe";
 import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
 import {
+  cancelChatRequest,
   recieveChatRequest,
   sendChatRequest,
   updateRequestAndContacts,
@@ -67,6 +68,15 @@ const Chat = () => {
         recieveChatRequest({
           senderId: data.requestFrom,
           recieverId: data.requestTo,
+        })
+      );
+    });
+    socket.current?.on("cancelChatRequest", (data) => {
+      dispatch(
+        cancelChatRequest({
+          senderId: data.requestFrom,
+          recieverId: data.requestTo,
+          action: "reciever",
         })
       );
     });

@@ -90,7 +90,26 @@ const recieveChatRequest = async (data: communication) => {
         },
       }
     );
-    console.log(response);
+
+    setCookie("user", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const cancelChatRequest = async (data: communication) => {
+  try {
+    const response = await axios.post(
+      userRoute + "/cancelChatRequest",
+      { data },
+      {
+        headers: {
+          Authorization: getUserAuthorizationToken(),
+        },
+      }
+    );
 
     setCookie("user", response.data);
     return response.data;
@@ -132,5 +151,6 @@ const authService = {
   sendChatRequest,
   recieveChatRequest,
   updateRequestAndContacts,
+  cancelChatRequest,
 };
 export default authService;

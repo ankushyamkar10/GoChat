@@ -66,7 +66,6 @@ export const MessageSlice = createSlice({
       state.selected = action.payload;
     },
     setMessages: (state, action) => {
-      console.log(action.payload);
       state.conversation.push(action.payload);
     },
   },

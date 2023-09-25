@@ -96,6 +96,7 @@ export type Data = {
 export interface communication {
   senderId: string;
   recieverId: string;
+  action?: string;
 }
 
 export interface requestAction {

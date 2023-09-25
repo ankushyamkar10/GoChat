@@ -59,21 +59,6 @@ export const login = createAsyncThunk<User, LoginData>(
   }
 );
 
-export const adduser = createAsyncThunk<User[] | Group[], addUser>(
-  "auth/addUser",
-  async (addUserData: addUser, thunkAPI) => {
-    try {
-      return await authService.addContact(addUserData);
-    } catch (e) {
-      if (e instanceof Error) {
-        const msg = e.message ? e.message : e.name && e.name;
-        return thunkAPI.rejectWithValue(msg);
-      }
-      return thunkAPI.rejectWithValue("An error occurred during login.");
-    }
-  }
-);
-
 export const sendChatRequest = createAsyncThunk<User, communication>(
   "auth/sendChatRequest",
   async (data, thunkAPI) => {
@@ -87,6 +72,24 @@ export const sendChatRequest = createAsyncThunk<User, communication>(
     }
   }
 );
+
+// remove requests from sender's database and also from recievers end
+// so make a scoket request
+
+export const cancelChatRequest = createAsyncThunk<User, communication>(
+  "auth/cancelChatRequest",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.cancelChatRequest(data);
+    } catch (e) {
+      if (e instanceof Error) {
+        const msg = e.message ? e.message : e.name && e.name;
+        return thunkAPI.rejectWithValue(msg);
+      }
+    }
+  }
+);
+
 export const recieveChatRequest = createAsyncThunk<User, communication>(
   "auth/recieveChatRequest",
   async (data, thunkAPI) => {
@@ -184,6 +187,22 @@ export const authSlice = createSlice({
           state.loggedInUser.recievedRequests = action.payload.recievedRequests;
       })
       .addCase(recieveChatRequest.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+      })
+      .addCase(cancelChatRequest.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(cancelChatRequest.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        if (state.loggedInUser) {
+          state.loggedInUser.sentRequests = action.payload.sentRequests;
+          state.loggedInUser.recievedRequests = action.payload.recievedRequests;
+        }
+      })
+      .addCase(cancelChatRequest.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
