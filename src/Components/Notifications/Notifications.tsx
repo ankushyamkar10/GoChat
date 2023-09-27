@@ -61,9 +61,9 @@ const Notifications = ({ socket }: Props) => {
 
   return (
     <div className="notification_list">
-      <section className="recieved-requests">
-        {loggedInUser &&
-          loggedInUser.recievedRequests.map((request) => {
+      {loggedInUser && loggedInUser.recievedRequests.length > 0 && (
+        <section className="recieved-requests">
+          {loggedInUser.recievedRequests.map((request) => {
             const user = mappedUsers.get(request);
             return (
               <div className="notification" key={request}>
@@ -92,7 +92,8 @@ const Notifications = ({ socket }: Props) => {
               </div>
             );
           })}
-      </section>
+        </section>
+      )}
       <section className="sent-requests">
         {loggedInUser &&
           loggedInUser.sentRequests.map((request) => {

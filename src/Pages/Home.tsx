@@ -13,18 +13,18 @@ import {
   updateRequestAndContacts,
   userState,
 } from "../features/Auth/AuthSlice";
-import ModalWrapper from "../Components/Config/ModalWrapper";
+import ModalWrapper from "../Components/Config/AddUserModal";
 import { ModalState } from "../features/Modal/ModalSlice";
 import FetchDataContext from "../features/FetchData/FetchDataContext";
+import AddGroupModal from "../Components/Config/AddGroupModal";
 
 const Chat = () => {
   const { loggedInUser } = useAppSelector(userState);
   const socket: React.MutableRefObject<Socket | undefined> = useRef<Socket>();
-  const { isOpenAddUser } = useAppSelector(ModalState);
+  const { isOpenAddUser, isOpenAddGroup } = useAppSelector(ModalState);
   const dispatch = useAppDispatch();
 
-  const { fetchUsersMore, fetchGroupsMore, mappedUsers } =
-    useContext(FetchDataContext);
+  const { fetchUsersMore, fetchGroupsMore } = useContext(FetchDataContext);
 
   useEffect(() => {
     socket.current = io(backendRoute);
@@ -86,6 +86,7 @@ const Chat = () => {
     return (
       <div>
         {isOpenAddUser && <ModalWrapper socket={socket} />}
+        {isOpenAddGroup && <AddGroupModal />}
         <div className="chats-screen">
           <div className="contacts">
             <UserMe />

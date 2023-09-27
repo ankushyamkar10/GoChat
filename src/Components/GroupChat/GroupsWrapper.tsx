@@ -11,6 +11,9 @@ import {
 import Messages from "../Messages/Messages";
 import MsgForm from "../MessageForm/MsgForm";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
+import { HiDotsVertical } from "react-icons/hi";
+import useOnClickOutside from "../../Utils/useOnClickOutside";
+import { leaveGroup } from "../../features/Group/GroupSlice";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -18,14 +21,14 @@ type Props = {
 };
 
 const GroupsWrapper = (props: Props) => {
+  const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
+  const [show, setShow] = useState<boolean>(false);
   const { socket, selected } = props;
   const { loggedInUser } = useAppSelector(userState);
-  // const { users } = useAppSelector(DataState);
   const { users } = useContext(FetchDataContext);
-
-  const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
   const dispatch = useAppDispatch();
   const msgContainerRef = useRef<HTMLDivElement | null>(null);
+  const squareBoxRef = useRef<HTMLDivElement>(null);
   const { conversation } = useAppSelector(MsgState);
 
   useEffect(() => {
@@ -54,38 +57,6 @@ const GroupsWrapper = (props: Props) => {
     }
   }, [loggedInUser, selected, fecthMessages, dispatch]);
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (
-  //     user &&
-  //     selected &&
-  //     msgRef.current?.value &&
-  //     msgRef.current.value.length > 0
-  //   ) {
-  //     socket.current?.emit("sendMsg", {
-  //       text: msgRef.current.value,
-  //       sender: user._id,
-  //       recieverId: selected._id,
-  //     });
-
-  //     const msgArg = {
-  //       text: msgRef.current.value,
-  //       sender: user._id,
-  //       reciever: selected._id,
-  //     };
-
-  //     dispatch(sendMessage(msgArg));
-  //     // dispatch(
-  //     //   fecthMessages({
-  //     //     userId: user._id,
-  //     //     selectedId: selected._id,
-  //     //   })
-  //     // );
-  //     msgRef.current.value = "";
-  //   }
-  // };
-
   useEffect(() => {
     socket.current?.on("recieveMsg", (data: Message) => {
       const new_msg = {
@@ -110,6 +81,17 @@ const GroupsWrapper = (props: Props) => {
     selected.members.some((member) => member === loggedInUser._id)
   );
 
+  const handleLeaveGroup = async () => {
+    if (loggedInUser) {
+      dispatch(leaveGroup({ userId: loggedInUser._id, groupId: selected._id }));
+      // frtchgroupsmore
+    }
+  };
+
+  useOnClickOutside(squareBoxRef, () => {
+    setShow(false);
+  });
+
   return (
     <section className="chatbox-section">
       <nav>
@@ -122,6 +104,23 @@ const GroupsWrapper = (props: Props) => {
               You
             </div>
           </div>
+        </div>
+        <div
+          className="icons"
+          onClick={() => setShow(!show)}
+          ref={squareBoxRef}
+        >
+          <HiDotsVertical size={20} />
+          {show && (
+            <div className="absolute w-10">
+              <div className="three_dots">
+                <div>Profile</div>
+                <div className="hover-red" onClick={handleLeaveGroup}>
+                  Leave Group
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
       <div className="message-container-main" ref={msgContainerRef}>

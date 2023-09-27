@@ -5,6 +5,7 @@ import { Group } from "../../Types/types";
 import { setSelected } from "../../features/Message/MessageSlice";
 import { Socket } from "socket.io-client";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
+import { handleAddGroupOpen } from "../../features/Modal/ModalSlice";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -12,7 +13,6 @@ type Props = {
 
 const GroupsList = (props: Props) => {
   const [search, setSearch] = useState("");
-  // const { groups } = useAppSelector(DataState);
   const { groups } = useContext(FetchDataContext);
 
   const dispatch = useAppDispatch();
@@ -44,7 +44,10 @@ const GroupsList = (props: Props) => {
           );
         })}
       </ul>
-      <div className="add_grp">
+      <div
+        className="add_grp"
+        onClick={() => dispatch(handleAddGroupOpen(true))}
+      >
         <MdGroupAdd size={16} />
       </div>
     </section>

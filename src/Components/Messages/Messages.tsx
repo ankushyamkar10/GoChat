@@ -6,12 +6,11 @@ import { useContext } from "react";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
 type Props = {
-  isGroup: Boolean;
+  isGroup: boolean;
 };
 
 const Messages = ({ isGroup }: Props) => {
   const { conversation } = useAppSelector(MsgState);
-  // const { users } = useAppSelector(DataState);
   const { users } = useContext(FetchDataContext);
 
   return (
@@ -26,7 +25,6 @@ const Messages = ({ isGroup }: Props) => {
               filteredUser = users.filter((user) => user._id === sender);
               img = filteredUser.length === 1 ? filteredUser[0].img : "";
             }
-
             return (
               <div
                 key={uniqid()}

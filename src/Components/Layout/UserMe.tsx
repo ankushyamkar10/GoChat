@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const UserMe = () => {
   const { loggedInUser } = useAppSelector(userState);
-  const [show, setShow] = useState<Boolean>(false);
+  const [show, setShow] = useState<boolean>(false);
   const squareBoxRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

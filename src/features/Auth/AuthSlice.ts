@@ -16,9 +16,9 @@ const loggedInUser = getCookie("user");
 
 type authInitial = {
   loggedInUser: User | null;
-  isError: Boolean;
-  isSuccess: Boolean;
-  isLoading: Boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  isLoading: boolean;
   message: string;
 };
 

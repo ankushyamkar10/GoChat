@@ -14,9 +14,9 @@ import messageService from "./MessageService";
 
 type messageInitial = {
   selected: User | Group | null;
-  isError: Boolean;
-  isSuccess: Boolean;
-  isLoading: Boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  isLoading: boolean;
   errorMessage: string;
   conversation: Message[];
 };

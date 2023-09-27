@@ -7,7 +7,7 @@ export interface User {
   _id: string;
   name: string;
   token: string;
-  isAvtarSet: Boolean;
+  isAvtarSet: boolean;
   img: string | userProfile;
   email: string;
   contacts: string[];
@@ -18,7 +18,7 @@ export interface User {
 export interface Users {
   name: string;
   token: string;
-  isAvtarSet: Boolean;
+  isAvtarSet: boolean;
   img: string | userProfile;
   email: string;
   contacts: User[];
@@ -28,7 +28,7 @@ export interface Group {
   name: string;
   _id: string;
   desc?: string;
-  isAvtarSet: Boolean;
+  isAvtarSet: boolean;
   img: string;
   admin: Array<string>;
   members: Array<string>;
@@ -38,7 +38,7 @@ export interface Group {
 export interface Entity {
   _id: string;
   name: string;
-  isAvtarSet: Boolean;
+  isAvtarSet: boolean;
   img: string | userProfile;
   token?: string;
   email?: string;
@@ -65,7 +65,7 @@ export interface Message {
     time_stamp: string;
   };
   sender: string;
-  isSenderMe: Boolean;
+  isSenderMe: boolean;
 }
 
 export interface addUser {
@@ -102,4 +102,15 @@ export interface communication {
 export interface requestAction {
   actionId: string;
   action: string;
+}
+
+export interface createGroupInterface {
+  name: string;
+  desc?: string;
+  members: Array<string>;
+  userId: string;
+}
+export interface leaveGroupInterface {
+  groupId: string;
+  userId: string;
 }

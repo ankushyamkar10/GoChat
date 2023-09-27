@@ -9,7 +9,13 @@ import {
   sendChatRequest,
   userState,
 } from "../../features/Auth/AuthSlice";
-import { MdCancel, MdPersonAdd } from "react-icons/md";
+import {
+  MdCancel,
+  MdInfo,
+  MdNote,
+  MdNoteAlt,
+  MdPersonAdd,
+} from "react-icons/md";
 import { Socket } from "socket.io-client";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
 
@@ -25,12 +31,20 @@ const ModalWrapper = ({ socket }: Props) => {
   const { loggedInUser } = useAppSelector(userState);
   const sentRequests = loggedInUser?.sentRequests;
   let filteredContacts: User[] = [];
-  if (loggedInUser)
+
+  if (loggedInUser) {
     filteredContacts = users.filter((curr: User) => {
       return !loggedInUser.contacts.find((one: string) => {
         return curr._id === one;
       });
     });
+    filteredContacts = filteredContacts.filter(
+      (contact: User) =>
+        !loggedInUser.recievedRequests.find((one: string) => {
+          return contact._id === one;
+        })
+    );
+  }
 
   const data = filteredContacts.filter((user: User) =>
     user.name.toLowerCase().includes(name.toLowerCase())
@@ -137,6 +151,10 @@ const ModalWrapper = ({ socket }: Props) => {
               })}
             </ul>
           )}
+          <div className="note">
+            <MdInfo size={25} />
+            <span>Please check your notifications tab for other contacts!</span>
+          </div>
         </div>
       </Modal>
     </>
