@@ -1,5 +1,5 @@
 import axios from "axios";
-import { groupRoute } from "../../Utils/constants";
+import { getGroupsRoute, groupRoute } from "../../Utils/constants";
 
 const createGroup = async (group: {
   name: string;
@@ -31,6 +31,28 @@ const leaveGroup = async (group: { userId: string; groupId: string }) => {
   }
 };
 
-// const leaveGroup = async
-const groupService = { createGroup, leaveGroup };
+const getGroupById = async (groupId: string) => {
+  try {
+    const response = await axios.get(getGroupsRoute + "/" + groupId);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const addParticipant = async (groupId: string, userId: string) => {
+  try {
+    const response = await axios.post(getGroupsRoute + "/" + groupId + "/add", {
+      userId,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+const groupService = { createGroup, leaveGroup, getGroupById, addParticipant };
 export default groupService;

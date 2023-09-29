@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Data, Group, User } from "../../Types/types";
 import FetchDataService from "./FetchDataService";
+import axios from "axios";
+import { getGroupsRoute } from "../../Utils/constants";
 
 const FDProvider = (): Data => {
   const [users, setUsers] = useState<Array<User>>([]);

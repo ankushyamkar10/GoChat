@@ -3,6 +3,7 @@ import { authReducer } from "../features/Auth/AuthSlice";
 import { MessageReducer } from "../features/Message/MessageSlice";
 import { ModalReducer } from "../features/Modal/ModalSlice";
 import { enableMapSet } from "immer";
+import groupReducer from "../features/Group/GroupSlice";
 
 enableMapSet();
 
@@ -19,6 +20,7 @@ export function configureLocalStore() {
     auth: authReducer,
     msg: MessageReducer,
     modal: ModalReducer,
+    group: groupReducer,
   });
 
   return configureStore({

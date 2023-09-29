@@ -14,7 +14,7 @@ const fetchUsers = async (user_id: string) => {
 
 const fetchGroups = async (user_id: string) => {
   try {
-    const response = await axios.get(getGroupsRoute + "/" + user_id);
+    const response = await axios.get(getGroupsRoute + "/all/" + user_id);
     return response.data;
   } catch (error) {
     return null;
