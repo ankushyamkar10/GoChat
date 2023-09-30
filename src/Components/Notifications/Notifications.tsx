@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
 import "./Notifications.scss";
@@ -16,7 +16,6 @@ type Props = {
 };
 
 const Notifications = ({ socket }: Props) => {
-  // const [requests, setRequests] = useState<Array<string>>([]);
   const { mappedUsers } = useContext(FetchDataContext);
   const { loggedInUser } = useAppSelector(userState);
   const dispatch = useAppDispatch();

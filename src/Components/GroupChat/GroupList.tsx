@@ -20,7 +20,6 @@ const GroupsList = (props: Props) => {
   const handleClick = (group: Group) => {
     dispatch(setSelected(group));
   };
-  console.log(groups);
 
   return (
     <section className="groups_sidebar">

@@ -21,7 +21,6 @@ const sendMsg = async ({ message, senderId, recieverId }: sendMessageProps) => {
       senderId,
       recieverId,
     });
-    // console.log(response.data);
 
     return response.data;
   } catch (error) {

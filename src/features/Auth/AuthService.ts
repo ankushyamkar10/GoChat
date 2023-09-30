@@ -133,7 +133,6 @@ const updateRequestAndContacts = async ({
         },
       }
     );
-    console.log(response);
 
     setCookie("user", response.data);
     return response.data;

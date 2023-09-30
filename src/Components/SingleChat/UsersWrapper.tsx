@@ -79,8 +79,9 @@ const UsersWapper = (props: Props) => {
       const new_msg = {
         message: data.message,
         isSenderMe: false,
-        sender: data.sender,
+        senderId: data.senderId,
       };
+      console.log(data.message);
 
       setUpComingMsg(new_msg);
     });

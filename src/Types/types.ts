@@ -63,8 +63,9 @@ export interface Message {
   message: {
     text: string;
     time_stamp: string;
+    date_stamp: string;
   };
-  sender: string;
+  senderId: string;
   isSenderMe: boolean;
 }
 
@@ -113,4 +114,9 @@ export interface createGroupInterface {
 export interface leaveGroupInterface {
   groupId: string;
   userId: string;
+}
+
+export interface theme {
+  theme: "dark" | "light";
+  handleTheme: () => void;
 }

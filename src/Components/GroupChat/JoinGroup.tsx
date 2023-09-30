@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Group } from "../../Types/types";
 import FetchDataContext from "../../features/FetchData/FetchDataContext";
-import { MdJoinFull, MdPersonAdd, MdSearch } from "react-icons/md";
+import { MdPersonAdd, MdSearch } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
 import {
   addParticipant,
@@ -36,14 +35,15 @@ const JoinGroup = () => {
     e.preventDefault();
 
     dispatch(getGroupById(id));
-    setJoinGroupData((prev) => ({ ...prev, id: "", code: "" }));
   };
 
   const handleAddUserToGroup = (groupId: string) => {
     if (loggedInUser) {
-      dispatch(addParticipant({ groupId, userId: loggedInUser._id }));
+      dispatch(addParticipant({ groupId, userId: loggedInUser._id, code }));
 
       fetchGroupsMore(loggedInUser._id);
+
+      setJoinGroupData((prev) => ({ ...prev, id: "", code: "" }));
       if (group) dispatch(handleAddGroupOpen(false));
     }
   };
@@ -69,9 +69,7 @@ const JoinGroup = () => {
           placeholder="Enter the code"
         />
 
-        <button>
-          Find <MdSearch />
-        </button>
+        <button>Search</button>
       </form>
 
       {group && (

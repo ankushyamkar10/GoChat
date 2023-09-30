@@ -66,10 +66,10 @@ export const getGroupById = createAsyncThunk<Group, string>(
 
 export const addParticipant = createAsyncThunk<
   Group,
-  { groupId: string; userId: string }
->("group/addParticipant", async ({ groupId, userId }, thunkAPI) => {
+  { groupId: string; userId: string; code: string }
+>("group/addParticipant", async ({ groupId, userId, code }, thunkAPI) => {
   try {
-    return await groupService.addParticipant(groupId, userId);
+    return await groupService.addParticipant(groupId, userId, code);
   } catch (e) {
     if (e instanceof Error) {
       const msg = e.message ? e.message : e.name && e.name;

@@ -17,14 +17,16 @@ import ModalWrapper from "../Components/Config/AddUserModal";
 import { ModalState } from "../features/Modal/ModalSlice";
 import FetchDataContext from "../features/FetchData/FetchDataContext";
 import AddGroupModal from "../Components/Config/AddGroupModal";
+import { ThemeContext } from "../features/ThemeContext";
+import { Message } from "../Types/types";
 
 const Chat = () => {
   const { loggedInUser } = useAppSelector(userState);
   const socket: React.MutableRefObject<Socket | undefined> = useRef<Socket>();
   const { isOpenAddUser, isOpenAddGroup } = useAppSelector(ModalState);
   const dispatch = useAppDispatch();
-
   const { fetchUsersMore, fetchGroupsMore } = useContext(FetchDataContext);
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     socket.current = io(backendRoute);
@@ -62,8 +64,6 @@ const Chat = () => {
     );
 
     socket.current?.on("recieveChatRequest", (data) => {
-      console.log(data.requestFrom);
-
       dispatch(
         recieveChatRequest({
           senderId: data.requestFrom,
@@ -80,11 +80,14 @@ const Chat = () => {
         })
       );
     });
+    socket.current?.on("recieveMsg", (data: Message) => {
+      console.log(data.message);
+    });
   }, [socket]);
 
   if (loggedInUser) {
     return (
-      <div>
+      <div className={`theme-${theme}`}>
         {isOpenAddUser && <ModalWrapper socket={socket} />}
         {isOpenAddGroup && <AddGroupModal />}
         <div className="chats-screen">

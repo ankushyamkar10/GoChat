@@ -1,4 +1,6 @@
 /* Home */
+
+$border: 1px solid rgba(0, 0, 0, 0.5);
 .chats-screen {
   display: flex;
   width: 100%;
@@ -6,7 +8,7 @@
 }
 .contacts {
   width: 25vw;
-  height: calc(100vh - 53.5px);
+  height: auto;
   border-right: 1px solid rgba(134, 150, 160, 0.15);
   position: relative;
 
@@ -283,6 +285,12 @@
         bottom: 3px;
         right: 3px;
       }
+      .message-date-stamp {
+        font-size: 8px;
+        position: absolute;
+        bottom: 3px;
+        left: 3px;
+      }
     }
     .bg-SenderMe {
       background: rgb(85, 237, 85);
@@ -343,4 +351,52 @@
 }
 .items-center {
   align-items: center;
+}
+.df {
+  display: flex;
+  align-items: center;
+}
+
+.theme-light {
+  background-color: white;
+  color: black;
+  // all other stuff
+  .contacts {
+    border-right: $border;
+    .input-search {
+      border-bottom: $border;
+      .search-users {
+        border: $border;
+        background-color: white;
+      }
+    }
+  }
+  .chatbox-section {
+    nav {
+      border-bottom: $border;
+    }
+  }
+  .user-groups-tabs {
+    border-bottom: $border;
+
+    div {
+      &:hover {
+        background: rgba($color: black, $alpha: 0.1);
+        cursor: pointer;
+      }
+    }
+  }
+  .contacts_list {
+    li {
+      border: $border;
+      background: white;
+      &:hover {
+        background: rgba($color: black, $alpha: 0.1);
+        cursor: pointer;
+      }
+    }
+  }
+  .user-me {
+    border-bottom: $border;
+  }
 }

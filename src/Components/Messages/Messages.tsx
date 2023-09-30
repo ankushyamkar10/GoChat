@@ -12,23 +12,23 @@ type Props = {
 const Messages = ({ isGroup }: Props) => {
   const { conversation } = useAppSelector(MsgState);
   const { users } = useContext(FetchDataContext);
-
   return (
     <div className="message-container">
       {conversation.length > 0 &&
         conversation.map((messages) => {
           if (messages) {
-            const { message, isSenderMe, sender } = messages;
+            const { message, isSenderMe, senderId } = messages;
             let img: string | userProfile = "";
             let filteredUser;
             if (isGroup) {
-              filteredUser = users.filter((user) => user._id === sender);
+              filteredUser = users.filter((user) => user._id === senderId);
               img = filteredUser.length === 1 ? filteredUser[0].img : "";
             }
+
             return (
               <div
                 key={uniqid()}
-                className={`display-flex items-center justify-content-${
+                className={`df  justify-content-${
                   isSenderMe ? "right" : "left"
                 } `}
               >
@@ -52,9 +52,7 @@ const Messages = ({ isGroup }: Props) => {
                   )}
 
                   <div className="message-text">{message.text}</div>
-                  <div className="message-time-stamp">
-                    {message?.time_stamp}
-                  </div>
+                  <div className="message-time-stamp">{message.time_stamp}</div>
                 </div>
               </div>
             );

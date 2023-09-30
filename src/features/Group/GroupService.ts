@@ -42,10 +42,15 @@ const getGroupById = async (groupId: string) => {
   }
 };
 
-const addParticipant = async (groupId: string, userId: string) => {
+const addParticipant = async (
+  groupId: string,
+  userId: string,
+  code: string
+) => {
   try {
     const response = await axios.post(getGroupsRoute + "/" + groupId + "/add", {
       userId,
+      code,
     });
 
     return response.data;

@@ -25,11 +25,11 @@ const GroupsWrapper = (props: Props) => {
   const [show, setShow] = useState<boolean>(false);
   const { socket, selected } = props;
   const { loggedInUser } = useAppSelector(userState);
-  const { users } = useContext(FetchDataContext);
+  const { conversation } = useAppSelector(MsgState);
+  const { users, fetchGroupsMore } = useContext(FetchDataContext);
   const dispatch = useAppDispatch();
   const msgContainerRef = useRef<HTMLDivElement | null>(null);
   const squareBoxRef = useRef<HTMLDivElement>(null);
-  const { conversation } = useAppSelector(MsgState);
 
   useEffect(() => {
     if (socket) {
@@ -62,16 +62,16 @@ const GroupsWrapper = (props: Props) => {
       const new_msg = {
         message: data.message,
         isSenderMe: false,
-        sender: data.sender,
+        senderId: data.senderId,
       };
-
+      console.log(data.senderId, loggedInUser?._id);
       setUpComingMsg(new_msg);
     });
   });
 
   useEffect(() => {
     if (upComingMsg) {
-      if (loggedInUser?._id !== upComingMsg.sender)
+      if (loggedInUser?._id !== upComingMsg.senderId)
         dispatch(setMessages(upComingMsg));
       setUpComingMsg(null);
     }
@@ -84,7 +84,7 @@ const GroupsWrapper = (props: Props) => {
   const handleLeaveGroup = async () => {
     if (loggedInUser) {
       dispatch(leaveGroup({ userId: loggedInUser._id, groupId: selected._id }));
-      // frtchgroupsmore
+      fetchGroupsMore(loggedInUser._id);
     }
   };
 
