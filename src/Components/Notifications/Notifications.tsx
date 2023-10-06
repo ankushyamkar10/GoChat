@@ -10,6 +10,7 @@ import {
   userState,
 } from "../../features/Auth/AuthSlice";
 import { User } from "../../Types/types";
+import { MessageNotificationContext } from "../../features/MessageNotificationContext";
 
 type Props = {
   socket: React.MutableRefObject<Socket | undefined>;
@@ -18,7 +19,17 @@ type Props = {
 const Notifications = ({ socket }: Props) => {
   const { mappedUsers } = useContext(FetchDataContext);
   const { loggedInUser } = useAppSelector(userState);
+  const { setMessagesNotifications, messagesNotifications } = useContext(
+    MessageNotificationContext
+  );
+
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    return () => {
+      setMessagesNotifications([]);
+    };
+  });
 
   useEffect(() => {
     socket.current?.on("requestAccepted", (data) => {
@@ -103,6 +114,11 @@ const Notifications = ({ socket }: Props) => {
               </div>
             );
           })}
+      </section>
+      <section className="sent-recieved">
+        {messagesNotifications.map((notification) => (
+          <div>{notification}</div>
+        ))}
       </section>
     </div>
   );

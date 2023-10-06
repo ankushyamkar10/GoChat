@@ -9,31 +9,38 @@ import Protect from "./Components/Config/Protect";
 import FetchDataContext from "./features/FetchData/FetchDataContext";
 import FDProvider from "./features/FetchData/FDProvider";
 import ThemeProvider, { ThemeContext } from "./features/ThemeContext";
+import MessageNotificationProvider, {
+  MessageNotificationContext,
+} from "./features/MessageNotificationContext";
 
 function App() {
   return (
     <>
       <ThemeContext.Provider value={ThemeProvider()}>
-        <FetchDataContext.Provider value={FDProvider()}>
-          <BrowserRouter>
-            <div>
-              <Routes>
-                <Route path="/login" element={<Login />}></Route>
-                <Route path="/register" element={<Regsiter />}></Route>
-                <Route
-                  index
-                  element={
-                    <Protect>
-                      <Chat />
-                    </Protect>
-                  }
-                ></Route>
-                <Route path="/setAvtar" element={<CloudImage />}></Route>
-              </Routes>
-            </div>
-          </BrowserRouter>
-          <ToastContainer />
-        </FetchDataContext.Provider>
+        <MessageNotificationContext.Provider
+          value={MessageNotificationProvider()}
+        >
+          <FetchDataContext.Provider value={FDProvider()}>
+            <BrowserRouter>
+              <div>
+                <Routes>
+                  <Route path="/login" element={<Login />}></Route>
+                  <Route path="/register" element={<Regsiter />}></Route>
+                  <Route
+                    index
+                    element={
+                      <Protect>
+                        <Chat />
+                      </Protect>
+                    }
+                  ></Route>
+                  <Route path="/setAvtar" element={<CloudImage />}></Route>
+                </Routes>
+              </div>
+            </BrowserRouter>
+            <ToastContainer />
+          </FetchDataContext.Provider>
+        </MessageNotificationContext.Provider>
       </ThemeContext.Provider>
     </>
   );

@@ -64,6 +64,8 @@ export const MessageSlice = createSlice({
   reducers: {
     setSelected: (state, action) => {
       state.selected = action.payload;
+      console.log(action.payload.name, "is selected!");
+      console.log(state.selected?.name);
     },
     setMessages: (state, action) => {
       state.conversation.push(action.payload);

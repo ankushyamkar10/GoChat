@@ -1,23 +1,14 @@
-const backendRoute: string = "https://gochat-backend-pj3c.onrender.com";
-const allUsersRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/users/all";
-const sendMsgRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/message/addMsg";
-const getMsgsRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/message/getMsgs";
-const setUserAvtarRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/users";
-const getGroupsRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/groups";
-const fecthUser: string = "https://gochat-backend-pj3c.onrender.com/api/users";
-const sendChatRequestRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/users";
+const backendRoute: string = "http://localhost:4000";
+const allUsersRoute: string = "http://localhost:4000/api/users/all";
+const sendMsgRoute: string = "http://localhost:4000/api/message/addMsg";
+const getMsgsRoute: string = "http://localhost:4000/api/message/getMsgs";
+const setUserAvtarRoute: string = "http://localhost:4000/api/users";
+const getGroupsRoute: string = "http://localhost:4000/api/groups";
+const fecthUser: string = "http://localhost:4000/api/users";
 
-const userRoute: string = "https://gochat-backend-pj3c.onrender.com/api/users";
-const groupRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/groups";
-const messageRoute: string =
-  "https://gochat-backend-pj3c.onrender.com/api/message";
+const userRoute: string = "http://localhost:4000/api/users";
+const groupRoute: string = "http://localhost:4000/api/groups";
+const messageRoute: string = "http://localhost:4000/api/message";
 
 export {
   backendRoute,

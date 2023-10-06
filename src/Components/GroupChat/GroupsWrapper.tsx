@@ -63,15 +63,22 @@ const GroupsWrapper = (props: Props) => {
         message: data.message,
         isSenderMe: false,
         senderId: data.senderId,
+        recieverId: data.recieverId,
       };
-      console.log(data.senderId, loggedInUser?._id);
-      setUpComingMsg(new_msg);
+      if (selected && loggedInUser)
+        if (
+          loggedInUser?._id === data.senderId ||
+          (localStorage["selected"] === data.senderId &&
+            loggedInUser?._id === data.recieverId)
+        ) {
+          setUpComingMsg(new_msg);
+        }
     });
-  });
+  }, [socket.current]);
 
   useEffect(() => {
     if (upComingMsg) {
-      if (loggedInUser?._id !== upComingMsg.senderId)
+      if (loggedInUser && loggedInUser?._id !== upComingMsg.senderId)
         dispatch(setMessages(upComingMsg));
       setUpComingMsg(null);
     }

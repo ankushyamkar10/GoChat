@@ -67,6 +67,7 @@ export interface Message {
   };
   senderId: string;
   isSenderMe: boolean;
+  recieverId: string;
 }
 
 export interface addUser {
@@ -119,4 +120,9 @@ export interface leaveGroupInterface {
 export interface theme {
   theme: "dark" | "light";
   handleTheme: () => void;
+}
+
+export interface MessageNotification {
+  messagesNotifications: Array<string>;
+  setMessagesNotifications: React.Dispatch<React.SetStateAction<string[]>>;
 }

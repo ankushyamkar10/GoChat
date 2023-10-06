@@ -2,10 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "../features/Auth/AuthSlice";
 import { MessageReducer } from "../features/Message/MessageSlice";
 import { ModalReducer } from "../features/Modal/ModalSlice";
-import { enableMapSet } from "immer";
 import groupReducer from "../features/Group/GroupSlice";
-
-enableMapSet();
 
 // export const store = configureStore({
 //   reducer: {

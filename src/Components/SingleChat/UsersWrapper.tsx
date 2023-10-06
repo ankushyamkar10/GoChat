@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import react from "../../assets/react.svg";
 import { Socket } from "socket.io-client";
 import { Message, User } from "../../Types/types";
 import Messages from "../Messages/Messages";
-import { MdPhone, MdVideoCall } from "react-icons/md";
-import { HiDotsVertical } from "react-icons/hi";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelector";
 import { userState } from "../../features/Auth/AuthSlice";
 import {
@@ -20,7 +18,8 @@ type Props = {
 };
 
 const UsersWapper = (props: Props) => {
-  const { socket, selected } = props;
+  const { socket } = props;
+  const { selected } = useAppSelector(MsgState);
   const { loggedInUser } = useAppSelector(userState);
   const [upComingMsg, setUpComingMsg] = useState<Message | null>(null);
   const msgContainerRef = useRef<HTMLDivElement | null>(null);
@@ -44,35 +43,11 @@ const UsersWapper = (props: Props) => {
         selectedId: selected._id,
       };
       dispatch(fecthMessages(msgArg));
+      console.log("fetching");
     }
-  }, [loggedInUser, selected, fecthMessages, dispatch]);
+  }, [selected]);
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (
-  //     user &&
-  //     selected &&
-  //     msgRef.current?.value &&
-  //     msgRef.current?.value.length > 0
-  //   ) {
-  //     socket.current?.emit("sendMsg", {
-  //       text: msgRef.current.value,
-  //       sender: user._id,
-  //       recieverId: selected._id,
-  //     });
-
-  //     const msgArg = {
-  //       text: msgRef.current.value,
-  //       sender: user._id,
-  //       reciever: selected._id,
-  //     };
-
-  //     dispatch(sendMessage(msgArg));
-
-  //     msgRef.current.value = "";
-  //   }
-  // };
+  console.log(selected?.name);
 
   useEffect(() => {
     socket.current?.on("recieveMsg", (data: Message) => {
@@ -80,19 +55,32 @@ const UsersWapper = (props: Props) => {
         message: data.message,
         isSenderMe: false,
         senderId: data.senderId,
+        recieverId: data.recieverId,
       };
-      console.log(data.message);
-
-      setUpComingMsg(new_msg);
+      if (selected && loggedInUser)
+        if (
+          loggedInUser?._id === data.senderId ||
+          (localStorage["selected"] === data.senderId &&
+            loggedInUser?._id === data.recieverId)
+        ) {
+          setUpComingMsg(new_msg);
+          console.log(
+            data.recieverId === loggedInUser?._id,
+            loggedInUser?._id === data.senderId
+          );
+          console.log(data.senderId === selected._id);
+          console.log(selected.name, data.senderId);
+        }
     });
-  });
+  }, [socket.current]);
 
   useEffect(() => {
     if (upComingMsg) {
       dispatch(setMessages(upComingMsg));
       setUpComingMsg(null);
+      console.log("upcomig is true");
     }
-  }, [upComingMsg, setMessages, dispatch]);
+  }, [upComingMsg]);
 
   return (
     <section className="chatbox-section">
@@ -107,8 +95,8 @@ const UsersWapper = (props: Props) => {
             alt={react}
           />
           <div className="selected-info">
-            <h4>{selected.name}</h4>
-            <div className="selected-email">{selected.email}</div>
+            <h4>{selected?.name}</h4>
+            {/* <div className="selected-email">{selected.email}</div> */}
           </div>
         </div>
       </nav>

@@ -24,8 +24,9 @@ const UsersList = ({ socket }: Props) => {
     if (!loggedInUser) navigate("/login");
   }, []);
 
-  const handleClick = (user: User) => {
+  const handleSelectClick = (user: User) => {
     dispatch(setSelected(user));
+    localStorage.setItem("selected", user._id);
   };
 
   const data =
@@ -55,7 +56,12 @@ const UsersList = ({ socket }: Props) => {
           const currUser = mappedUsers.get(user);
           if (currUser)
             return (
-              <li key={currUser._id} onClick={() => handleClick(currUser)}>
+              <li
+                key={currUser._id}
+                onClick={() => {
+                  handleSelectClick(currUser);
+                }}
+              >
                 <img
                   src={
                     typeof currUser.img === "string"

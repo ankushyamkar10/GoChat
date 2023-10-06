@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from "../hooks/useTypedSelector";
 import {
   cancelChatRequest,
   recieveChatRequest,
-  sendChatRequest,
   updateRequestAndContacts,
   userState,
 } from "../features/Auth/AuthSlice";
@@ -19,13 +18,16 @@ import FetchDataContext from "../features/FetchData/FetchDataContext";
 import AddGroupModal from "../Components/Config/AddGroupModal";
 import { ThemeContext } from "../features/ThemeContext";
 import { Message } from "../Types/types";
+import { MessageNotificationContext } from "../features/MessageNotificationContext";
 
 const Chat = () => {
   const { loggedInUser } = useAppSelector(userState);
   const socket: React.MutableRefObject<Socket | undefined> = useRef<Socket>();
   const { isOpenAddUser, isOpenAddGroup } = useAppSelector(ModalState);
   const dispatch = useAppDispatch();
-  const { fetchUsersMore, fetchGroupsMore } = useContext(FetchDataContext);
+  const { fetchUsersMore, fetchGroupsMore, mappedUsers } =
+    useContext(FetchDataContext);
+  const { setMessagesNotifications } = useContext(MessageNotificationContext);
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ const Chat = () => {
       fetchUsersMore(loggedInUser._id);
       fetchGroupsMore(loggedInUser._id);
     }
+    localStorage.setItem("selected", "");
   }, []);
 
   useEffect(() => {
@@ -80,8 +83,22 @@ const Chat = () => {
         })
       );
     });
-    socket.current?.on("recieveMsg", (data: Message) => {
-      console.log(data.message);
+    socket.current?.on("recieveMsg", ({ senderId, message }: Message) => {
+      console.log(senderId);
+
+      if (localStorage["selected"] !== senderId) {
+        console.log(mappedUsers);
+
+        setMessagesNotifications((prev) => [
+          ...prev,
+          "Message from " +
+            (mappedUsers.get(senderId)
+              ? mappedUsers.get(senderId)?.name
+              : "User") +
+            " : " +
+            message.text,
+        ]);
+      }
     });
   }, [socket]);
 

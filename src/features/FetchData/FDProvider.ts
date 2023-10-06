@@ -37,6 +37,7 @@ const FDProvider = (): Data => {
     users.forEach((user: User) => {
       mappedUsers.set(user._id, user);
     });
+
   groups &&
     groups.forEach((group: Group) => {
       mappedGroups.set(group._id, group);

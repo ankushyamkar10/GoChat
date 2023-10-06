@@ -27,7 +27,8 @@ const Chatbox = (props: Props) => {
       });
     }
   }, []);
-
+  useEffect(() => console.log("rerendered"), [socket]);
+  useEffect(() => console.log("seleccted"), [selected]);
   if (!selected) {
     return <div className="nochat-div">No Chats</div>;
   } else if ("email" in selected) {
